@@ -370,7 +370,7 @@ int contaNeri(rbt_t *rbt, rbtNode_t *x)
  * @param x Current RBT node.
  * @return Black height if all paths have the same black height; otherwise, -1.
  */
-int rbtComputeBlackHeightRicorsiva(rbt_t *rbt, rbtNode_t *x)
+int rbtComputeBlackHeightRicorsiva(rbt_t *rbt, rbtNode_t *x) // Pare non funzionare
 {
     if (x == rbt->nil) // L'altezza nera dei nodi T->NIL è sempre 0
         return 0;
