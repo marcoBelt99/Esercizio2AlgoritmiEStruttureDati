@@ -35,6 +35,7 @@ void linkedListFree(linkedList_t *list);
 // #################################################################################################
 int main(void)
 {
+    printf("********* Test Liste collegate *********\n");
     // Creo la lista (nello HEAP). Per riferirmi al suo indirizzo uso un puntatore di tipo lista
     linkedList_t *L = createLinkedList();
     // Creo nello STACK alcuni puntatori a nodi per potermi riferire ai nodi che sono creati nello HEAP
@@ -93,7 +94,7 @@ int main(void)
 // #################################################################################################
 linkedListNode_t *createLinkedListNode(const int v)
 {
-    linkedListNode_t *risultato = malloc(sizeof(linkedListNode_t)); // alloco nello HEAP lo spazio necessario per il nuovo nodo
+    linkedListNode_t *risultato = malloc(sizeof(linkedListNode_t)); // Alloco nello HEAP lo spazio necessario per il nuovo nodo
     risultato->value = v;                                           // ci metto la chiave
     risultato->next = NULL;                                         // inizializzo il puntatore next
     risultato->prev = NULL;                                         // inizializzo il puntatore prev

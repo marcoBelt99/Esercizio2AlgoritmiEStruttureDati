@@ -219,13 +219,13 @@ void rbtLeftRotate(rbt_t *rbt, rbtNode_t *x)
 {
     if (rbt && x) // Controllo validità dei puntatori
     {
-        rbtNode_t *y = x->right;
-        x->right = y->left;
+        rbtNode_t *y = x->right; // Imposta y
+        x->right = y->left;      // Sposta il sottoalbero sinistro di y nel sottoalbero destro di x
         if (y->left != rbt->nil)
         {
             y->left->parent = x;
         }
-        y->parent = x->parent;
+        y->parent = x->parent; // Collega il padre di x a y
         if (x->parent == rbt->nil)
         { //x is root
             rbt->root = y;
@@ -247,7 +247,7 @@ void rbtLeftRotate(rbt_t *rbt, rbtNode_t *x)
         exit(EXIT_FAILURE);
     }
 } // fine rbtLeftRotate
-void rbtRightRotate(rbt_t *rbt, rbtNode_t *x)
+void rbtRightRotate(rbt_t *rbt, rbtNode_t *x) // Basta scambiare left con right
 {
     if (rbt && x) // Controllo validità puntatori
     {
@@ -350,35 +350,35 @@ void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z) // Con questa funziona perfettamen
             if (z->parent == z->parent->parent->left)
             { //z.parent is the left child
 
-                rbtNode_t *y = z->parent->parent->right; //uncle of z
+                rbtNode_t *y = z->parent->parent->right; // y è lo zio del nodo z appena inserito
 
                 if (y->color == RED)
-                { //case 1
-                    z->parent->color = BLACK;
+                {                             // Caso 1
+                    z->parent->color = BLACK; // padre diventa nero
                     y->color = BLACK;
-                    z->parent->parent->color = RED;
-                    z = z->parent->parent;
+                    z->parent->parent->color = RED; // il nonno diventa rosso
+                    z = z->parent->parent;          // continua sistemando i nonni (vai verso l'alto)
                 }
                 else
-                { //case2 or case3
-                    if (z == z->parent->right)
-                    {                  //case2
-                        z = z->parent; //marked z.parent as new z
+                {                              // Caso 2 o caso 3
+                    if (z == z->parent->right) // Sono nel figlio destro?
+                    {                          // Caso 2
+                        z = z->parent;         // il nuovo z è z.parent
                         rbtLeftRotate(rbt, z);
                     }
-                    //case3
-                    z->parent->color = BLACK;       //made parent black
-                    z->parent->parent->color = RED; //made parent red
+                    // Caso 3
+                    z->parent->color = BLACK;       // padre nero
+                    z->parent->parent->color = RED; // nonno rosso
                     rbtRightRotate(rbt, z->parent->parent);
                 }
             }
             else
             {                                           //z.parent is the right child
-                rbtNode_t *y = z->parent->parent->left; //uncle of z
+                rbtNode_t *y = z->parent->parent->left; // y è lo zio di z
 
-                if (y->color == RED)
+                if (y->color == RED) // Se lo zio è rosso
                 {
-                    z->parent->color = BLACK;
+                    z->parent->color = BLACK; // Ricolora
                     y->color = BLACK;
                     z->parent->parent->color = RED;
                     z = z->parent->parent;
@@ -387,16 +387,17 @@ void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z) // Con questa funziona perfettamen
                 {
                     if (z == z->parent->left)
                     {
-                        z = z->parent; //marked z.parent as new z
+                        z = z->parent; // z è diventato suo padre
                         rbtRightRotate(rbt, z);
                     }
-                    z->parent->color = BLACK;       //made parent black
-                    z->parent->parent->color = RED; //made parent red
+                    z->parent->color = BLACK;       // padre nero
+                    z->parent->parent->color = RED; // nonno rosso
                     rbtLeftRotate(rbt, z->parent->parent);
                 }
             }
         }
-        rbt->root->color = BLACK;
+        rbt->root->color = BLACK; // La radice deve sempre essere NERA
+
     } // fine controllo validità puntatori
     else
     {
@@ -408,10 +409,10 @@ void rbtInsert(rbt_t *rbt, rbtNode_t *z)
 {
     if (rbt && z) // Controllo validità puntatori
     {
-        rbtNode_t *y = rbt->nil; //variable for the parent of the added node
-        rbtNode_t *x = rbt->root;
+        rbtNode_t *y = rbt->nil;  // y è usato come puntatore di inseguimento
+        rbtNode_t *x = rbt->root; // x parte dalla radice
 
-        while (x != rbt->nil)
+        while (x != rbt->nil) // Trova la posizione giusta per inserire il nuovo nodo z
         {
             y = x;
             if (z->value < x->value)
@@ -430,9 +431,10 @@ void rbtInsert(rbt_t *rbt, rbtNode_t *z)
         else
             y->right = z;
 
+        // Fin qui era analogo all'inserimento in BST
         z->right = rbt->nil;
         z->left = rbt->nil;
-        z->color = RED; // MODIFICATO QUA
+        z->color = RED; 
         rbtInsertFixup(rbt, z);
 
         rbt->size++; // mi serve incrementare la dimensione dell'albero per ogni nuovo nodo inserito
