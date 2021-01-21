@@ -485,34 +485,20 @@ bool rbtHasBstProperty(rbt_t *rbt)
     inorderToArray(rbt, rbt->root, Nodi, &i); // Popolo l'array con la visita in order dell'albero
 
     i = 0;
-    /* for (i = 0; i < rbt->size; i++)
+    for (i = 0; i < rbt->size; i++)
     {
-        // Se il nodo corrente è maggiore del suo figlio sinistro e minore o uguale al suo figlio destro
-        //if ((Nodi[i]->value > Nodi[i]->left->value) && (Nodi[i]->value <= Nodi[i]->right->value))
-        if (i + 1 == rbt->size)
-            break;
-        else
+
+     
+        if ((Nodi[i]->left != rbt->nil) && (Nodi[i]->right != rbt->nil)) // Se non sono foglie
         {
-            if (Nodi[i]->value < Nodi[i + 1]->value)
-            {
-                continue; // Allora ok, il sottoalbero formato da: nodo corrente, figlio sx del nodo corrente e
-            }             // figlio dx del nodo corrente sta rispettando la Proprietà BST
+            if (Nodi[i]->value > Nodi[i]->left->value && Nodi[i]->value <= Nodi[i]->right->value) // Verifico questa proprietà per questo sottoalbero
+                continue;
             else
                 return false;
         }
-    } */
-    // int max = Nodi[rbt->size];
-    // Parto dall'ultimo e arrivo al primo --> Prova modifica
-    if (Nodi[rbt->size]->value < Nodi[rbt->size - 1]->value) // Confronto l'ultimo col penultimo
-        return false;                                        // Falso, perchè l'ultimo elemento dell'array deve essere maggiore del penultimo
 
-    while ((i + 1 != rbt->size) && (Nodi[i + 1]->value > Nodi[i]->value))
-    {
-        /* if (!(Nodi[rbt->size]->value > Nodi[i]->value && i < rbt->size))
-            return false; */
-        i++;
-        continue;
-    }
+    } // fine for
+
     // Arrivato qui, ho soddisfatto la Proprietà BST
     return true;
 }
@@ -831,6 +817,5 @@ int main()
         printf("Ripulito completamente\n");
     else
         printf("C'è qualche altro nodo da ripulire\n");
-    printf("Ciao");
     return 0;
 }
