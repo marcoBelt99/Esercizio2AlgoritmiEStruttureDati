@@ -831,5 +831,6 @@ int main()
         printf("Ripulito completamente\n");
     else
         printf("C'è qualche altro nodo da ripulire\n");
+    printf("Ciao");
     return 0;
 }
