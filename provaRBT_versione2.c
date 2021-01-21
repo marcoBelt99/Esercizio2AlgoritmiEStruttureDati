@@ -502,6 +502,7 @@ bool rbtHasBstProperty(rbt_t *rbt)
         }
     } */
     // int max = Nodi[rbt->size];
+    // Parto dall'ultimo e arrivo al primo --> Prova modifica
     if (Nodi[rbt->size]->value < Nodi[rbt->size - 1]->value) // Confronto l'ultimo col penultimo
         return false;                                        // Falso, perchè l'ultimo elemento dell'array deve essere maggiore del penultimo
 
