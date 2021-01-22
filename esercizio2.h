@@ -4,6 +4,7 @@
 #include <stdlib.h>  // Standard library (e.g., rand, srand).
 #include <stdbool.h> // Boolean library (e.g., bool).
 #include <string.h>  // String library (e.g., strcmp)
+#include <unistd.h>  // Per funzionalità POSIX
 
 #define RED 'R' // Uso un alias per rendere più informativo il singolo carattere
 #define BLACK 'B'
@@ -330,6 +331,104 @@ void generateRandomArray(int *, const int);
  */
 bool isSorted(const int *, const int);
 
+/**
+ * @brief Utilissima funzione la cui costruzione è ispirata dalla visita inOrder
+ * @param rbt The RBT.
+ * @param x Current RBT node.
+ * @param Nodi Vettore di nodi su cui salvare i nodi incontrati durante la visita
+ * @param i puntatore all'indice per tenere traccia del percorso
+ */
+void inorderToArray(rbt_t *rbt, rbtNode_t *x, rbtNode_t **Nodi, int *i);
+
+/**
+ * @brief Allega alla visita PreOrder l'informazione sull'altezza nera per ogni nodo.
+ * @param rbt L'albero da visitare.
+ * @param x Nodo corrente. Tipicamente, inizialmente sarà rbt->root; poi sarà chiamato ricorsivamente a sinistra e a destra
+ * @return True if it is sorted; otherwise, false
+ */
+void stampaAltezzaNeraPreOrder(rbt_t *rbt, rbtNode_t *x);
+/**
+ * @brief Allega alla visita InOrder l'informazione sull'altezza nera per ogni nodo.
+ * @param rbt L'albero da visitare.
+ * @param x Nodo corrente. Tipicamente, inizialmente sarà rbt->root; poi sarà chiamato ricorsivamente a sinistra e a destra
+ * @return True if it is sorted; otherwise, false
+ */
+void stampaAltezzaNeraInorder(rbt_t *rbt, rbtNode_t *x);
+/**
+ * @brief Allega alla visita PostOrder l'informazione sull'altezza nera per ogni nodo.
+ * @param rbt L'albero da visitare.
+ * @param x Nodo corrente. Tipicamente, inizialmente sarà rbt->root; poi sarà chiamato ricorsivamente a sinistra e a destra
+ * @return True if it is sorted; otherwise, false
+ */
+void stampaAltezzaNeraPostOrder(rbt_t *rbt, rbtNode_t *x);
+
+/**
+ * @brief Procedura POSIX che serve per ottenere una "pulizia" dello schermo, dal punto in cui è chiamata in poi.
+ */
+void clearScreen();
+/**
+ * @brief Calcola il nodo a chiave minima in un rbt (e dunque in un bst). In generale, tale nodo è posto all'estrema sinistra.
+ * @param rbt L'albero da visitare.
+ * @return Il nodo a chiave minima
+ */
+rbtNode_t *rbtMinimum(rbt_t *rbt);
+/**
+ * @brief Calcola il nodo a chiave massima in un rbt (e dunque in un bst). In generale, tale nodo è posto all'estrema destra.
+ * @param rbt L'albero da visitare.
+ * @return Il nodo a chiave minima
+ */
+rbtNode_t *rbtMaximum(rbt_t *rbt);
+/**
+ * @brief Calcola ricorsivamente a sinistra e a destra il numero di nodi neri di un albero.
+ *  Ricorda: il numero di nodi neri deve essere lo stesso in ogni percorso semplice
+ * @param rbt L'albero su cui calcolare questo numero.
+ * @param x Nodo di controllo che avanza finchè non diventa pari a rbt->nil .
+ * @return Il numero di nodi neri.
+ */
+int contaNeri(rbt_t *rbt, rbtNode_t *x);
+/**
+ * @brief Print RBT in Preorder.
+ * @param rbt to be printed.
+ * @param x node to be printed.
+ */
+void rbtPreOrder(rbt_t *rbt, rbtNode_t *x);
+/**
+ * @brief Print RBT in Postorder.
+ * @param rbt to be printed.
+ * @param x node to be printed.
+ */
+void rbtPostOrder(rbt_t *rbt, rbtNode_t *x);
+
+/**
+ * @brief Testa se vale la proprietà 1 degli RBT:
+ * @param rbt L'albero di interesse.
+ * @return true se la proprietà è vera, false altrimenti
+ */
+bool rbtProprieta_1(rbt_t *rbt);
+/**
+ * @brief Testa se vale la proprietà 2 degli RBT:
+ * @param rbt L'albero di interesse.
+ * @return true se la proprietà è vera, false altrimenti
+ */
+bool rbtProprieta_2(rbt_t *rbt);
+/**
+ * @brief Testa se vale la proprietà 3 degli RBT:
+ * @param rbt L'albero di interesse.
+ * @return true se la proprietà è vera, false altrimenti
+ */
+bool rbtProprieta_3(rbt_t *rbt);
+/**
+ * @brief Testa se vale la proprietà 4 degli RBT:
+ * @param rbt L'albero di interesse.
+ * @return true se la proprietà è vera, false altrimenti
+ */
+bool rbtProprieta_4(rbt_t *rbt);
+/**
+ * @brief Testa se vale la proprietà 5 degli RBT:
+ * @param rbt L'albero di interesse.
+ * @return true se la proprietà è vera, false altrimenti
+ */
+bool rbtProprieta_5(rbt_t *rbt);
 // End of AUXILIARY FUNCTIONS
 
 // CORE FUNCTIONS

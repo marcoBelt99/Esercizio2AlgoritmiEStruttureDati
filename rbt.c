@@ -227,15 +227,15 @@ void rbtLeftRotate(rbt_t *rbt, rbtNode_t *x)
         }
         y->parent = x->parent; // Collega il padre di x a y
         if (x->parent == rbt->nil)
-        { //x is root
+        { // x è la radice
             rbt->root = y;
         }
         else if (x == x->parent->left)
-        { //x is left child
+        { //x è il figlio sinistro
             x->parent->left = y;
         }
         else
-        { //x is right child
+        { // x è il figlio destro
             x->parent->right = y;
         }
         y->left = x;
@@ -259,15 +259,15 @@ void rbtRightRotate(rbt_t *rbt, rbtNode_t *x) // Basta scambiare left con right
         }
         y->parent = x->parent;
         if (x->parent == rbt->nil)
-        { //x is root
+        { //x è la radice
             rbt->root = y;
         }
         else if (x == x->parent->right)
-        { //x is left child
+        { //x è il figlio sinistro
             x->parent->right = y;
         }
         else
-        { //x is right child
+        { //x è il figlio destro
             x->parent->left = y;
         }
         y->right = x;
@@ -423,10 +423,10 @@ void rbtInsert(rbt_t *rbt, rbtNode_t *z)
         z->parent = y;
 
         if (y == rbt->nil)
-        { //newly added node is root
-            rbt->root = z;
+        {
+            rbt->root = z; // Il nuovo nodo è la radice
         }
-        else if (z->value < y->value) //data of child is less than its parent, left child
+        else if (z->value < y->value) 
             y->left = z;
         else
             y->right = z;
@@ -434,7 +434,7 @@ void rbtInsert(rbt_t *rbt, rbtNode_t *z)
         // Fin qui era analogo all'inserimento in BST
         z->right = rbt->nil;
         z->left = rbt->nil;
-        z->color = RED; 
+        z->color = RED;
         rbtInsertFixup(rbt, z);
 
         rbt->size++; // mi serve incrementare la dimensione dell'albero per ogni nuovo nodo inserito
@@ -570,13 +570,6 @@ void stampaAltezzaNeraPreOrder(rbt_t *rbt, rbtNode_t *x) // Stampa altezza nera 
 }
 
 // Funzioni ausiliarie e propedeutiche per vedere le proprietà dell'albero
-/**
- * @brief Utilissima funzione la cui costruzione è ispirata dalla visita inOrder
- * @param rbt The RBT.
- * @param x Current RBT node.
- * @param Nodi Vettore di nodi su cui salvare i nodi incontrati durante la visita
- * @param i puntatore all'indice per tenere traccia del percorso
- */
 void inorderToArray(rbt_t *rbt, rbtNode_t *x, rbtNode_t **Nodi, int *i)
 {
     if (rbt && x && Nodi && i)

@@ -1,18 +1,18 @@
 #include "esercizio2.h"
 
 //  VARIABILI GLOBALI
- time_t RANDOM_SEED = 20;                         // Random seed (important for reproducibility).
- const unsigned int MAX_RANDOM_NUMBER = 10000000; // Maximum random number allowed.
- const unsigned int MIN_OPERATIONS = 100;         // Minimum number of operations.
- const unsigned int MAX_OPERATIONS = 2000;        // Maximum number of operations.
- const unsigned int STEP = 100;                   // Step of the experiment.
- const unsigned int NUM_EXPERIMENTS = 50;         // Number of experiments.
- const unsigned int PERCENTAGE_INSERTIONS = 40;   // Percentage of insert operations.
- const unsigned int NUM_ENTRIES = 59;             // Size of the hashtable.
- const bool TEST_DATA_STRUCTURES = true;          // Test data structures?
- const unsigned int NUM_ELEMENTS_FOR_TEST = 1000; // Number of elements for testing.
- const outputEnum_t outputType = ONFILE;          // Output type.
- FILE *outputPointer;                             // Output pointer (for printing).
+time_t RANDOM_SEED = 20;                         // Random seed (important for reproducibility).
+const unsigned int MAX_RANDOM_NUMBER = 10000000; // Maximum random number allowed.
+const unsigned int MIN_OPERATIONS = 100;         // Minimum number of operations.
+const unsigned int MAX_OPERATIONS = 2000;        // Maximum number of operations.
+const unsigned int STEP = 100;                   // Step of the experiment.
+const unsigned int NUM_EXPERIMENTS = 50;         // Number of experiments.
+const unsigned int PERCENTAGE_INSERTIONS = 40;   // Percentage of insert operations.
+const unsigned int NUM_ENTRIES = 59;             // Size of the hashtable.
+const bool TEST_DATA_STRUCTURES = true;          // Test data structures?
+const unsigned int NUM_ELEMENTS_FOR_TEST = 1000; // Number of elements for testing.
+const outputEnum_t outputType = ONFILE;          // Output type.
+FILE *outputPointer;                             // Output pointer (for printing).
 
 int main()
 {
@@ -72,10 +72,12 @@ int main()
             int *randomArray = malloc(numInsertions * sizeof(int));
             // Fill-in the array with random numbers.
             generateRandomArray(randomArray, numInsertions);
-            // Hashtable experiment.
+
+            // ***********************  Hashtable experiment ***********************.
             timeHashtable += doExperiment(randomArray, numInsertions, numSearches, "hashtable");
-            // RBT experiment.
+            // ***********************  RBT experiment *****************************.
             timeRbt += doExperiment(randomArray, numInsertions, numSearches, "rbt");
+
             // Free the array of random numbers.
             free(randomArray);
         }
@@ -116,5 +118,5 @@ int main()
 
     // Return 0.
     return 0;
-    
+
 } // fine main

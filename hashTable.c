@@ -95,7 +95,7 @@ int main(void)
     // RICERCA DI UN ELEMENTO (contenuto in un nodo di una delle s liste collegate )
     int chiaveDiRicerca = 0;
     printf("Inserire una chiave da ricercare nella HT: ");
-    scanf("%d", &chiaveDiRicerca);
+    fscanf(stdin, "%d", &chiaveDiRicerca);
     linkedListNode_t *nodoDaRicercare = hashtableSearch(HT, chiaveDiRicerca);
     if (nodoDaRicercare != NULL)
         printf("Elemento trovato: %d\n", nodoDaRicercare->value);
