@@ -11,4 +11,5 @@ Ho separato il codice in 4 file:
 - esercizio2.c: contenente la definizione delle funzioni richieste ed altre mie funzioni aggiuntive.
 - esercizio2.h: contenente la dichiarazione di tali funzioni; sono presenti anche le definizioni delle strutture dati utilizzate.
 - Makefile: contenente istruzioni per la compilazione. Genera un eseguibile di nome 'Esercizio2'.
-Gli altri file: contengono degli esempi di test per la verifica del corretto funzionamento degli algoritmi tradotti in programmi.
+
+# Gli altri file: contengono degli esempi di test per la verifica del corretto funzionamento degli algoritmi tradotti in programmi.
