@@ -57,7 +57,7 @@ bool rbtProprieta_5(rbt_t *rbt);
 // ******************* MAIN *******************
 int main()
 {
-    clearScreen(); // Ripulisco il terminale
+    // clearScreen(); // Ripulisco il terminale
     // Creazione
     rbt_t *T = createRbt();                                                                   // Creo l'rbt nello HEAP
     int A[] = {26, 17, 41, 14, 21, 30, 47, 10, 16, 19, 23, 28, 38, 7, 12, 15, 20, 35, 39, 3}; // Vettore contente i valore dei nodi che creerò ed inserirò
