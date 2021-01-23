@@ -77,9 +77,7 @@ typedef enum outputEnum_t
 
 // fine  STRUTTURE DATI AUSILIARIE
 
-// fine STRUTTURE DATI
-
-//  VARIABILI GLOBALI
+//  VARIABILI GLOBALI: DICHIARAZIONE CON KEYWORD: extern
 extern time_t RANDOM_SEED;                       // Random seed (important for reproducibility).
 extern const unsigned int MAX_RANDOM_NUMBER;     // Maximum random number allowed.
 extern const unsigned int MIN_OPERATIONS;        // Minimum number of operations.
@@ -92,8 +90,9 @@ extern const bool TEST_DATA_STRUCTURES;          // Test data structures?
 extern const unsigned int NUM_ELEMENTS_FOR_TEST; // Number of elements for testing.
 extern const outputEnum_t outputType;            // Output type.
 extern FILE *outputPointer;                      // Output pointer (for printing).
-
 // Fine VARIABILI GLOBALI
+
+// fine STRUTTURE DATI
 
 //  DICHIARAZIONI DELLE FUNZIONI
 
@@ -438,7 +437,7 @@ bool rbtProprieta_5(rbt_t *rbt);
  * @param Array of random numbers.
  * @param Number of insertion operations.
  * @param Number of search operations.
- * @param Data structure to be used. The possible values are:
+ * @param Data structure to be used. The possible values are: hashtable and rbt.
  * @return Elapsed time for the experiment.
  */
 clock_t doExperiment(int *, const unsigned int, const unsigned int, char *);

@@ -66,6 +66,9 @@ void linkedListDelete(linkedList_t *list, linkedListNode_t *x)
         x->next->prev = x->prev; // salto indietro di una posizione
     list->size--;                // decremento la dimensione della lista
     free(x);                     // precedentemente allocata per il nodo che ho appena reso indisponibile alla ricerca
+    x->next = NULL;
+    x->prev = NULL;
+    // x = NULL;
 }
 
 void linkedListPrint(linkedList_t *list) // implementata
@@ -83,9 +86,9 @@ void linkedListFree(linkedList_t *list)
     linkedListNode_t *aux;
     while (list->head != NULL) // finchè sto puntando a qualche nodo
     {
-        aux = list->head;              // memorizzo l'indirizzo della testa
-        list->head = list->head->next; // passo al prossimo elemento
-        free(aux);
+        aux = list->head;              // Memorizzo l'indirizzo della testa ( che è sempre elemento corrente)
+        list->head = list->head->next; // Passo al prossimo elemento
+        free(aux);                     // Libero l'elemento corrente
     }
     free(list);
 }
@@ -100,11 +103,11 @@ hashtable_t *createHashtable(const unsigned int s)
     hashtable_t *HT = malloc(sizeof(hashtable_t)); // Alloco lo spazio per contenere la HT nello HEAP. HT è un puntatore di tipo hashtable_t
     if (!HT)                                       // Controllo correttezza dell'allocazione
         return NULL;
-    HT->entry = malloc(sizeof(hashtableEntry_t) * s); // Alloco lo spazio per s caselle di puntatori a lista nello HEAP
+    HT->entry = malloc(sizeof(hashtableEntry_t) * s); // Alloco lo spazio per s Caselle (di puntatori a lista) nello HEAP
     // HT->entry = malloc(sizeof(hashtableEntry_t **) * s)
     if (!(HT->entry)) // Controllo correttezza dell'allocazione
         return NULL;
-    HT->size = s;                  // La tabella hash ha s caselle
+    HT->size = s;                  // La tabella hash ha esattamente s caselle
     for (i = 0; i < HT->size; i++) // Inizializzo la tabella hash
     {
         hashtableEntry_t *casella = malloc(sizeof(hashtableEntry_t *)); // Alloco casella da essegnare alla posizione i-esima della lista
@@ -141,7 +144,7 @@ void hashtableDelete(hashtable_t *hashtbl, linkedListNode_t *x)
     linkedListDelete(hashtbl->entry[indiceCasella]->list, x); // Cancella x dalla lista T[hashtbl(x.value)]
 }
 
-void hashtablePrint(hashtable_t *hashtbl) // implementata
+void hashtablePrint(hashtable_t *hashtbl) // già implementata
 {
     for (int i = 0; i < hashtbl->size; i++)
     {
@@ -151,16 +154,17 @@ void hashtablePrint(hashtable_t *hashtbl) // implementata
     }
 }
 
-bool hashtableTest() // Dimostro su file con main saparato
+/* bool hashtableTest() // Dimostro su file Separato
 {
     return;
-}
+} 
+*/
 
 void hashtableFree(hashtable_t *hashtbl)
 {
     for (unsigned int i = 0; i < hashtbl->size; i++)
-        linkedListFree(hashtbl->entry[i]->list); // dealloco prima tutte le liste collegate di ogni entry della HT
-    free(hashtbl);
+        linkedListFree(hashtbl->entry[i]->list); // Dealloco prima tutte le liste collegate di ogni entry della HT
+    free(hashtbl);                               // Poi la hash table
 }
 
 // Fine HASHTABLE
@@ -384,20 +388,28 @@ rbtNode_t *rbtSearch(rbt_t *rbt, const int v)
     }
 } // fine ricerca
 
-void rbtInOrder(rbt_t *rbt, rbtNode_t *x) // implementata
+void rbtInOrder(rbt_t *rbt, rbtNode_t *x) // Visita InOrder
 {
-    if (x != rbt->nil)
+    if (rbt && x) // Controllo validità puntatori
     {
-        rbtInOrder(rbt, x->left);
-        printf("%d ", x->value);
-        rbtInOrder(rbt, x->right);
+        if (x != rbt->nil)
+        {
+            rbtInOrder(rbt, x->left);
+            printf("Nodo:\t%d\tcolore:\t%c\n", x->value, (x->color == RED) ? 'R' : 'B');
+            rbtInOrder(rbt, x->right);
+        }
     }
-}
+    else
+    {
+        fprintf(stderr, "rbtInOrder: Errore, puntatori NULL\n");
+        exit(EXIT_FAILURE);
+    }
+} // fine rbtInOrder
 
-bool rbtTest() // TODO:
+/* bool rbtTest() // Funzione su file separato:
 {
     return;
-}
+} */
 
 bool isRbt(rbt_t *rbt)
 {
@@ -548,12 +560,7 @@ void rbtFree(rbt_t *T)
 
 // AUXILIARY FUNCTIONS
 
-void generateRandomArray(int *A, const int n) // implementata
-{
-    // For each i in 0..n-1, generate a random number.
-    for (int i = 0; i < n; i++)
-        A[i] = rand() % MAX_RANDOM_NUMBER;
-}
+// funzione generateRandomArray spostata sul main. Ho spostato anche la funzione doExperiment
 
 bool isSorted(const int *A, const int n) // implementata
 {
@@ -880,14 +887,5 @@ bool rbtHasBstProperty_Iterativa(rbt_t *rbt) // !!!Non propriamente corretta !!!
     return true;
 }
 // End of AUXILIARY FUNCTIONS
-
-// CORE FUNCTIONS
-
-clock_t doExperiment(int *randomArray, const unsigned int numInsertions, const unsigned int numSearches, char *dataStructure)
-{
-    return;
-}
-
-//  Fine CORE FUNCTIONS
 
 // Fine IMPLEMENTATION OF THE FUNCTIONS

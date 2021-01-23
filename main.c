@@ -1,7 +1,8 @@
 #include "esercizio2.h"
 
-//  VARIABILI GLOBALI
-time_t RANDOM_SEED = 20;                         // Random seed (important for reproducibility).
+//  VARIABILI GLOBALI: DEFINIZIONE qui
+// Valori di default
+/* time_t RANDOM_SEED = 20;                         // Random seed (important for reproducibility).
 const unsigned int MAX_RANDOM_NUMBER = 10000000; // Maximum random number allowed.
 const unsigned int MIN_OPERATIONS = 100;         // Minimum number of operations.
 const unsigned int MAX_OPERATIONS = 2000;        // Maximum number of operations.
@@ -12,15 +13,30 @@ const unsigned int NUM_ENTRIES = 59;             // Size of the hashtable.
 const bool TEST_DATA_STRUCTURES = true;          // Test data structures?
 const unsigned int NUM_ELEMENTS_FOR_TEST = 1000; // Number of elements for testing.
 const outputEnum_t outputType = ONFILE;          // Output type.
-FILE *outputPointer;                             // Output pointer (for printing).
+FILE *outputPointer;                             // Output pointer (for printing). */
 
-int main()
+// Setto dei valori io
+time_t RANDOM_SEED = 20;                       // Seme random (importante per la riproducibilità).
+const unsigned int MAX_RANDOM_NUMBER = 1000;   // Massimo numero casuale ammesso.
+const unsigned int MIN_OPERATIONS = 2;         // Minimum number of operations.
+const unsigned int MAX_OPERATIONS = 10;        // Maximum number of operations.
+const unsigned int STEP = 2;                   // Step dell'esperimento.
+const unsigned int NUM_EXPERIMENTS = 5;        // Numero di esperimenti.
+const unsigned int PERCENTAGE_INSERTIONS = 40; // Percentuale di operazioni di inserimento.
+const unsigned int NUM_ENTRIES = 10;           // Dimensione della HT.
+const bool TEST_DATA_STRUCTURES = true;        // Test strutture dati?
+const unsigned int NUM_ELEMENTS_FOR_TEST = 10; // Numero di elementi per testarle.
+const outputEnum_t outputType = ONCONSOLE;     // Tipo di output.
+FILE *outputPointer;                           // Puntatore di output (per la stampa).
+
+int main(void)
 {
-    srand(RANDOM_SEED);             // Random seed initialization.
-    clock_t timeHashtable = 0;      // Elapsed time for hashtable.
-    clock_t timeRbt = 0;            // Elapsed time for RBT.
-    unsigned int numInsertions = 0; // Number of insert operations.
-    unsigned int numSearches = 0;   // Number of search operations.
+    srand(RANDOM_SEED); // Inizializzo il seed casuale.
+    // Le prossime 4 variabili le uso per ospitare il risultato dei calcoli per l'esperimento
+    clock_t timeHashtable = 0;      // Tempo trascorso per la HashTable.
+    clock_t timeRbt = 0;            // Tempo trascorso per l' RBT.
+    unsigned int numInsertions = 0; // Numero di operazioni di inserimento.
+    unsigned int numSearches = 0;   // Numero di operazioni di ricerca.
 
     if (outputType == ONCONSOLE || outputType == ONFILE) // What is the outputPointer?
     {
@@ -30,7 +46,6 @@ int main()
 
         else // On file.
         {
-
             outputPointer = fopen("results.txt", "w"); // Open file.
 
             if (outputPointer == NULL) // Have we opened the file?
@@ -39,7 +54,7 @@ int main()
                 exit(-1);
             }
         }
-    }
+    } // Fine if controllo: "Qual'è il tipo di input?"
 
     else // Error
     {
@@ -58,30 +73,32 @@ int main()
     // For each number of operations in the interval [MIN_OPERATIONS, MAX_OPERATIONS] with STEP
     for (int numOps = MIN_OPERATIONS; numOps <= MAX_OPERATIONS; numOps += STEP)
     {
-
-        timeHashtable = timeRbt = 0; // Reset the times.
+        printf("********numOps******** = %d. (STEP = %d)\n\n", numOps, STEP); // SOLO DI PROVA
+        timeHashtable = timeRbt = 0;                                          // Reset the times.
 
         for (int exper = 1; exper <= NUM_EXPERIMENTS; exper++) // For each experiment
         {
-
+            printf("exper = %d\n", exper); // SOLO DI PROVA
             // Compute the number of insert operations.
             numInsertions = numOps * PERCENTAGE_INSERTIONS / 100;
             // Compute the number of search operations.
-            numSearches = numOps - numInsertions;
+            numSearches = numOps - numInsertions; // me lo calcolo di conseguenza
             // Allocate numInsertions memory cells for the array of random numbers.
             int *randomArray = malloc(numInsertions * sizeof(int));
             // Fill-in the array with random numbers.
             generateRandomArray(randomArray, numInsertions);
-
             // ***********************  Hashtable experiment ***********************.
             timeHashtable += doExperiment(randomArray, numInsertions, numSearches, "hashtable");
             // ***********************  RBT experiment *****************************.
             timeRbt += doExperiment(randomArray, numInsertions, numSearches, "rbt");
 
             // Free the array of random numbers.
+            // Prova stampa array:
+            printArray(randomArray, numInsertions);
+            printf("\n"); // SOLO DI PROVA
             free(randomArray);
-        }
-        // Printing the (sample mean as) result. Use TAB (\t) on file.
+        } // Fine esperimento NUM_EXPERIMENTS-esimo
+        /* // Printing the (sample mean as) result. Use TAB (\t) on file.
         if (outputType == ONCONSOLE)
             fprintf(outputPointer, "| %15d - %-3d & %-3d | %19f | %19f |\n",
                     numOps,
@@ -94,8 +111,10 @@ int main()
                     numOps,
                     (float)timeHashtable / NUM_EXPERIMENTS,
                     (float)timeRbt / NUM_EXPERIMENTS);
+                    */
     }
 
+    /*
     // Print the ending part, only if it is on console.
     if (outputType == ONCONSOLE)
     {
@@ -116,7 +135,60 @@ int main()
         fprintf(outputPointer, "+-------------------------------------------------------------------------+\n");
     }
 
-    // Return 0.
+    // Return 0. */
     return 0;
 
 } // fine main
+
+// FUNZIONE AUSILIARIA:
+
+void generateRandomArray(int *A, const int n) // implementata
+{
+    // For each i in 0..n-1, generate a random number.
+    for (int i = 0; i < n; i++)
+        A[i] = rand() % MAX_RANDOM_NUMBER;
+}
+int generateRandomKey() { return rand() % MAX_RANDOM_NUMBER; }
+void printArray(int *A, const int n)
+{
+    for (int i = 0; i < n; i++)
+        printf("%d\n", A[i]);
+    //printf("\n");
+}
+// CORE FUNCTIONS
+
+clock_t doExperiment(int *randomArray, const unsigned int numInsertions, const unsigned int numSearches, char *dataStructure)
+{
+
+    clock_t tempoInizio, tempoFine = 0; // Li uso per entrambe le strutture dati
+    int chiaveDiRicerca = 0;
+    // generateRandomArray(randomArray, numInsertions); // Già stato creato nel main...
+    if (strcmp(dataStructure, "hashtable") == 0)
+    {
+        // Creazione Hash Table
+        hashtable_t *HT = NULL;            // Creo sullo STACK un puntatore ad una hashtable che si trova sullo HEAP
+        HT = createHashtable(NUM_ENTRIES); // Creo la HT di dimensione NUM_ENTRIES
+
+        // Inserimento in Hash Table
+        for (int i = 0; i < NUM_ENTRIES; i++)
+            hashtableInsert(HT, randomArray[i]);
+
+        // Ricerca in Hash Table
+    }
+    else if (strcmp(dataStructure, "rbt") == 0)
+    {
+
+        // Esegui esperimento per rbt
+    }
+    else
+    {
+        fprintf(stderr, "doExperiment: Errore sul nome della struttura dati inserita.\
+        \nSi prega di utilizzare:\n\t'hashtable' per sperimentare le tabelle hash\n\t'rbt'\
+        per sperimentare gli alberi red black\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return (tempoFine - tempoInizio); // Ritorno il tempo atteso per l'esperimento
+}
+
+//  Fine CORE FUNCTIONS

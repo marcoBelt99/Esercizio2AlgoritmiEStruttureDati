@@ -1,7 +1,7 @@
 # Algoritmi e Strutture Dati
 
 In questo repository sono presenti i sorgenti dell'esercizio 2 di ASD a.a. 2020/2021.
-L'esercizio consiste nel confrontare sperimentalmente, per input crescenti e casuali (uniformemente distribuiti) le operazioni di dizionario, eccetto l'eliminazione, che offrono le due strutture dati Hash Table e Red Black Tree.\
+L'esercizio consiste nel confrontare sperimentalmente, per input crescenti e casuali (uniformemente distribuiti) le operazioni di dizionario, eccetto l'eliminazione, che offrono le due strutture dati Hash Table e Red Black Tree.
 
 In particolare, in questo repository si trovano le implementazioni di:
 
@@ -24,6 +24,6 @@ Gli altri file:
 - hashTable.c
 - rbt.c
 
-contengono degli esempi di test per la verifica del corretto funzionamento degli algoritmi da applicare alle due strutture dati, tradotti in programmi.\
+contengono degli esempi di test per la verifica del corretto funzionamento degli algoritmi da applicare alle due strutture dati, tradotti in programmi.
 In particolare, nel file 'Esecuzione_e_Memcheck_con_Valgrind.txt' sono presenti 3 esempi di esecuzione, rispettivamente per: liste concatenate, tabelle hash ed alberi rosso neri.
 Ogni esecuzione è accompagnata dal "memcheck" effettuato da valgrid, allo scopo di assicurarsi di non aver commesso "memory leaks".
