@@ -32,6 +32,7 @@ Ogni esecuzione è accompagnata dal "memcheck" effettuato da valgrid, avente lo 
 
 # Compilazione - linking - eseguibile
 In prima istanza bisognerà assicurarsi di essere all'interno della propria directory di lavoro (quella contenente tutti i file sorgenti menzionati sopra).
-Per compilare, effettuare il linking, e dunque ottenere il file eseguibile, digitare, da terminale, il comando: `make` .
-Per eseguire il file, in ambiente Unix, digitare, da terminale: `./Esercizio2`.
+- Per compilare, effettuare il linking, e dunque ottenere il file eseguibile, digitare, da terminale, il comando: `make` .
+- Per eseguire il file, in ambiente Unix, digitare, da terminale: `./Esercizio2`.
+- Per rimuovere i file .o dal direttorio, dare il comando: `make clean`.
 
