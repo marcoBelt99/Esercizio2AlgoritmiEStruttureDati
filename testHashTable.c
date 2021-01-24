@@ -39,7 +39,7 @@ bool hashtableTest()
 {
     // Parametri controllo automatico ai fini della funzione test
     int SIZE_UNIVERSO = 20;
-    int chiaveDiRicerca = 35;
+    int chiaveDiRicerca = 47;
     unsigned int m = 10; // Dimensione della hashtable: La setto in automatico ai fini della funzione di test
 
     /* Questo codice è commentato per non "sporcare lo stdoutput"

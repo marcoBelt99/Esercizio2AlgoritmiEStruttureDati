@@ -29,7 +29,7 @@ bool rbtTest()
     // CREAZIONE
     rbt_t *T = createRbt();                                                                   // Creo l'rbt nello HEAP
     int A[] = {26, 17, 41, 14, 21, 30, 47, 10, 16, 19, 23, 28, 38, 7, 12, 15, 20, 35, 39, 3}; // Vettore contente i valore dei nodi che creerò ed inserirò
-    int chiave = 35;                                                                          // Mi servirà per verificare la Ricerca
+    int chiave = 47;                                                                          // Mi servirà per verificare la Ricerca
 
     // INSERIMENTO (preceduto dalla creazione di alcuni nodi)
     for (int i = 0; i < 20; i++) // Creo nello HEAP 20 nodi e li Inserisco opportunamente nell'rbt T
