@@ -13,12 +13,12 @@ In particolare, in questo repository si trovano le implementazioni di:
 
 Ho separato il codice in 4 file principali che servono per gestire l'esericizio:
 
-- main.c: contenente il programma da cui far partire l'esercizio.
-- esercizio2.c:       contenente la definizione delle funzioni richieste (eccetto le quelle di "test") ed altre mie funzioni aggiuntive.
-- esercizio2.h:       contenente la dichiarazione di tali funzioni; sono presenti anche le definizioni dei tipi rappresentanti le strutture dati utilizzate.
-- testHashTable.c:    contenente la definizione della funzione "hashtableTest".
-- testRedBlackTree.c: contenente la definizione della funzione "rbtTest".
-- Makefile: contenente istruzioni per la compilazione ed il linking. Genera un eseguibile di nome "Esercizio2".
+- [main.c](): contenente il programma da cui far partire l'esercizio.
+- [sercizio2.c]():       contenente la definizione delle funzioni richieste (eccetto le quelle di "test") ed altre mie funzioni aggiuntive.
+- [esercizio2.h]():       contenente la dichiarazione di tali funzioni; sono presenti anche le definizioni dei tipi rappresentanti le strutture dati utilizzate.
+- [testHashTable.c]():    contenente la definizione della funzione "hashtableTest".
+- [testRedBlackTree.c](): contenente la definizione della funzione "rbtTest".
+- [Makefile](): contenente istruzioni per la compilazione ed il linking. Genera un eseguibile di nome "Esercizio2".
 
 Gli altri file:
 
