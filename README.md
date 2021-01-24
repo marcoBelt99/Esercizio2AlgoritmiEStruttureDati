@@ -13,7 +13,7 @@ In particolare, in questo repository si trovano le implementazioni di:
 
 Ho separato il codice in 6 file principali che servono per gestire l'esericizio:
 
-- [main.c](): contenente il programma da cui far partire l'esercizio.
+- [main.c](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/main.c): contenente il programma da cui far partire l'esercizio.
 - [esercizio2.c](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/esercizio2.c):       contenente la definizione delle funzioni richieste (eccetto quelle di test: "hashtableTest" e "rbtTest") ed altre mie funzioni aggiuntive.
 - [esercizio2.h](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/esercizio2.h):       contenente la dichiarazione di tali funzioni; sono presenti anche le definizioni dei tipi rappresentanti le strutture dati utilizzate.
 - [testHashTable.c](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/testHashTable.c):    contenente la definizione della funzione "hashtableTest".
