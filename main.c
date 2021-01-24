@@ -30,13 +30,13 @@ const outputEnum_t outputType = ONCONSOLE;     // Tipo di output.
 FILE *outputPointer;                           // Puntatore di output (per la stampa). */
 
 time_t RANDOM_SEED = 20;                       // Seme random (importante per la riproducibilità).
-const unsigned int MAX_RANDOM_NUMBER = 1000;   // Massimo numero casuale ammesso.
+const unsigned int MAX_RANDOM_NUMBER = 500;    // Massimo numero casuale ammesso.
 const unsigned int MIN_OPERATIONS = 100;       // Minimum number of operations.
-const unsigned int MAX_OPERATIONS = 6000;      // Maximum number of operations.
+const unsigned int MAX_OPERATIONS = 10000;     // Maximum number of operations.
 const unsigned int STEP = 150;                 // Step dell'esperimento.
 const unsigned int NUM_EXPERIMENTS = 200;      // Numero di esperimenti.
-const unsigned int PERCENTAGE_INSERTIONS = 50; // Percentuale di operazioni di inserimento.
-const unsigned int NUM_ENTRIES = 3;            // Dimensione della HT.
+const unsigned int PERCENTAGE_INSERTIONS = 60; // Percentuale di operazioni di inserimento.
+const unsigned int NUM_ENTRIES = 10;           // Dimensione della HT.
 const bool TEST_DATA_STRUCTURES = true;        // Test strutture dati?
 const unsigned int NUM_ELEMENTS_FOR_TEST = 10; // Numero di elementi per testarle.
 const outputEnum_t outputType = ONCONSOLE;     // Tipo di output.
@@ -191,23 +191,25 @@ clock_t doExperiment(int *randomArray, const unsigned int numInsertions, const u
         HT = createHashtable(NUM_ENTRIES);  // Creo la HT di dimensione NUM_ENTRIES
 
         tempoInizio = clock();
+        // Inserimento
         for (int i = 0; i < numInsertions; i++)
-            hashtableInsert(HT, randomArray[i]); // Inserimento in Hash Table
+            hashtableInsert(HT, randomArray[i]);
 
         // hashtablePrint(HT); // scopo di correttezza
-
         //  printf("\nChiave di ricerca:\t%d\n", chiaveDiRicerca);
-        // Ricerca in Hash Table
 
-        hashtableSearch(HT, chiaveDiRicerca);
+        // Ricerca in Hash Table
+        nodoLista = hashtableSearch(HT, chiaveDiRicerca);
         tempoFine = clock();
+
         hashtableFree(HT);
     }
     else if (strcmp(dataStructure, "rbt") == 0)
     {
         /************** RBT **************/
         // Creazione Red Black Tree
-        rbt_t *T = createRbt();    // Creo l'rbt nello HEAP
+        rbt_t *T = NULL;
+        T = createRbt();           // Creo l'rbt nello HEAP
         rbtNode_t *nodoRbt = NULL; // per cercare
 
         // Creazione dei nodi. Nota: per evitare di rallentare il tempo per gli rbt,
@@ -216,16 +218,16 @@ clock_t doExperiment(int *randomArray, const unsigned int numInsertions, const u
             Nodi[i] = createRbtNode(randomArray[i]); //  ma da effettuarla al di fuore del tempo di sperimentazione
 
         tempoInizio = clock();
+        // Inserimento
         for (int i = 0; i < numInsertions; i++)
-            rbtInsert(T, Nodi[i]); // Inserimento in RBT
-        //rbtInsert(T, createRbtNode(randomArray[i]));
-        //  rbtInOrder(T, T->root);
+            rbtInsert(T, Nodi[i]); //rbtInsert(T, createRbtNode(randomArray[i]));
 
+        //  rbtInOrder(T, T->root);
         // printf("\nChiave di ricerca:\t%d\n", chiaveDiRicerca); // scopo di correttezza
 
+        //Ricerca
         nodoRbt = rbtSearch(T, chiaveDiRicerca);
         tempoFine = clock();
-        // Esegui esperimento per rbt
 
         rbtFree(T);
     }
