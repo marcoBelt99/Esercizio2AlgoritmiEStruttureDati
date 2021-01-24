@@ -11,7 +11,7 @@ In particolare, in questo repository si trovano le implementazioni di:
 
 # Specifiche di progetto esercizio 2 algoritmi e strutture dati
 
-Ho separato il codice in 4 file principali che servono per gestire l'esericizio:
+Ho separato il codice in 6 file principali che servono per gestire l'esericizio:
 
 - [main.c](): contenente il programma da cui far partire l'esercizio.
 - [esercizio2.c](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/esercizio2.c):       contenente la definizione delle funzioni richieste (eccetto quelle di test: "hashtableTest" e "rbtTest") ed altre mie funzioni aggiuntive.
