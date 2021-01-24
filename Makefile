@@ -12,3 +12,6 @@ testHashTable.o: testHashTable.c esercizio2.h
 
 testRedBlackTree.o: testRedBlackTree.c esercizio2.h
 	gcc -g -c testRedBlackTree.c
+
+clean: # Aggiungo il target clean, per ripulire il direttorio dai file oggetto
+	rm *.o Esercizio2
