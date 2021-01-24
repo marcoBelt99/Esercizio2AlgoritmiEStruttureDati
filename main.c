@@ -179,11 +179,10 @@ void printArray(int *A, const int n)
 
 clock_t doExperiment(int *randomArray, const unsigned int numInsertions, const unsigned int numSearches, char *dataStructure)
 {
-
+    /************** HASH TABLE **************/
     clock_t tempoInizio, tempoFine = 0; // Li uso per entrambe le strutture dati
     int chiaveDiRicerca = 250;
-    // generateRandomArray(randomArray, numInsertions); // Già stato creato nel main...
-    // chiaveDiRicerca = generateRandomKey();
+    // chiaveDiRicerca = generateRandomKey(); // La genero casualmente?
     if (strcmp(dataStructure, "hashtable") == 0)
     {
         // Creazione Hash Table
@@ -206,18 +205,20 @@ clock_t doExperiment(int *randomArray, const unsigned int numInsertions, const u
     }
     else if (strcmp(dataStructure, "rbt") == 0)
     {
+        /************** RBT **************/
         // Creazione Red Black Tree
         rbt_t *T = createRbt();    // Creo l'rbt nello HEAP
         rbtNode_t *nodoRbt = NULL; // per cercare
-        // Creazione dei nodi.
-        /* rbtNode_t *Nodi[numInsertions];
-        for (int i = 0; i < numInsertions; i++)
-            Nodi[i] = createRbtNode(randomArray[i]); */
+
+        // Creazione dei nodi. Nota: per evitare di rallentare il tempo per gli rbt,
+        rbtNode_t *Nodi[numInsertions];              // ho dichiarato un array di nodi per contenerli tutti,
+        for (int i = 0; i < numInsertions; i++)      // in modo da non effettuare la creazione "a tempo di inserimento"
+            Nodi[i] = createRbtNode(randomArray[i]); //  ma da effettuarla al di fuore del tempo di sperimentazione
 
         tempoInizio = clock();
         for (int i = 0; i < numInsertions; i++)
-            // rbtInsert(T, Nodi[i]); // Inserimento in RBT
-            rbtInsert(T, createRbtNode(randomArray[i]));
+            rbtInsert(T, Nodi[i]); // Inserimento in RBT
+        //rbtInsert(T, createRbtNode(randomArray[i]));
         //  rbtInOrder(T, T->root);
 
         // printf("\nChiave di ricerca:\t%d\n", chiaveDiRicerca); // scopo di correttezza

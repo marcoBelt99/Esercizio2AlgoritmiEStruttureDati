@@ -309,7 +309,7 @@ void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z)
         while (z->parent->color == RED)
         {
             if (z->parent == z->parent->parent->left)
-            { //z.parent is the left child
+            { // z parente è il figlio sinistro
 
                 rbtNode_t *y = z->parent->parent->right; // y è lo zio del nodo z appena inserito
 
