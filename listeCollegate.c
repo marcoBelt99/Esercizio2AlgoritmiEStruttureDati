@@ -35,55 +35,61 @@ void linkedListFree(linkedList_t *list);
 // #################################################################################################
 int main(void)
 {
-    printf("********* Test Liste collegate *********\n");
+    int A[] = {26, 17, 41, 14, 21, 30, 47, 10, 16, 19, 23, 28, 38, 7, 12, 15, 20, 35, 39, 3};
+    fprintf(stdout, "********* Test Liste collegate *********\n");
     // Creo la lista (nello HEAP). Per riferirmi al suo indirizzo uso un puntatore di tipo lista
     linkedList_t *L = createLinkedList();
     // Creo nello STACK alcuni puntatori a nodi per potermi riferire ai nodi che sono creati nello HEAP
-    linkedListNode_t *nodo1 = createLinkedListNode(17);
+    /* linkedListNode_t *nodo1 = createLinkedListNode(17);
     linkedListNode_t *nodo2 = createLinkedListNode(5); // creo nello STACK un puntatore ad un nodo creato nello HEAP
     linkedListNode_t *nodo3 = createLinkedListNode(190);
     linkedListNode_t *nodo4 = createLinkedListNode(6);
     linkedListNode_t *nodo5 = createLinkedListNode(45);
     linkedListNode_t *nodo6 = createLinkedListNode(66);
-    linkedListNode_t *nodo7 = createLinkedListNode(23);
+    linkedListNode_t *nodo7 = createLinkedListNode(23); */
 
     // Inserisco il nodo appena creato in testa alla lista
-    linkedListInsert(L, nodo1);
+    /* linkedListInsert(L, nodo1);
     linkedListInsert(L, nodo2);
     linkedListInsert(L, nodo3);
     linkedListInsert(L, nodo4);
     linkedListInsert(L, nodo5);
     linkedListInsert(L, nodo6);
-    linkedListInsert(L, nodo7);
+    linkedListInsert(L, nodo7); */
+
+    // INSERIMENTO
+    for (int i = 0; i < 20; i++)
+        linkedListInsert(L, createLinkedListNode(A[i]));
+
     // Stampo la lista dopo l'inserimento
-    printf("Situazione della Lista dopo l'inserimento dei nodi:\n");
+    fprintf(stdout, "Situazione della Lista dopo l'inserimento dei nodi:\n");
     linkedListPrint(L);
-    printf("\nLa dimensione della Lista è: %d\n", L->size);
+    fprintf(stdout, "\nLa dimensione della Lista è: %d\n", L->size);
 
-    // Cancello il nodo 5 (il cui value è 45)
-    linkedListDelete(L, nodo5);
-    // linkedListDelete(L,nodo1);
-    // linkedListDelete(L,nodo7);
-    // Stampo la lista dopo la cancellazione del nodo
-    printf("Situazione della Lista dopo la cancellazione del nodo il cui valore è 45:\n");
-    linkedListPrint(L);
-    printf("\nLa dimensione della Lista è: %d\n", L->size);
-
-    // Ricerca
+    // RICERCA
     int chiave = 0;
-    printf("\n");
-    printf("Inserire la chiave da cercare: ");
-    scanf("%d", &chiave);
-    printf("Ricerca del nodo con chiave %d:\n", chiave);
+    fprintf(stdout, "\nInserire la chiave da cercare: "); // Leggo la chiave da eliminare
+    fscanf(stdin, "%d", &chiave);
+    fprintf(stdout, "Ricerca del nodo con chiave %d:\n", chiave);
     linkedListNode_t *nodoRicerca; //
     nodoRicerca = linkedListSearch(L, chiave);
-    // printf("\nLista:\n");
-    // linkedListPrint(L);
+
+    // Se esiste bene, altrimenti esco
     if ((nodoRicerca != NULL) && (nodoRicerca->value == chiave))
-        printf("Trovato\n");
+        fprintf(stdout, "Trovato\n");
     else
-        printf("Non trovato\n");
-    // free(nodoRicerca); // Non serve a niente :-/
+    {
+        fprintf(stdout, "Non trovato\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // ELIMINAZIONE
+    linkedListDelete(L, nodoRicerca); // suppongo di voler eliminare lo stesso nodo cercato prima
+    // Stampo la lista dopo la cancellazione del nodo
+    fprintf(stdout, "Situazione della Lista dopo la cancellazione del nodo il cui valore è %d:\n", nodoRicerca->value);
+    linkedListPrint(L);
+    fprintf(stdout, "\nLa dimensione della Lista è: %d\n", L->size);
+
     // Libero la memoria occupata dalla lista, che ora non mi serve più
     linkedListFree(L);
     return 0;

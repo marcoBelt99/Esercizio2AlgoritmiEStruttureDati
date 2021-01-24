@@ -3,7 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define SIZE_UNIVERSO 9
+// #define SIZE_UNIVERSO 9
+#define SIZE_UNIVERSO 20
 
 // #################################################################################################
 // DEFINIZIONE TIPI
@@ -50,7 +51,7 @@ void hashtableInsert(hashtable_t *hashtbl, const int v);              // Inserim
 linkedListNode_t *hashtableSearch(hashtable_t *hashtbl, const int v); // Ricerca di un elemento (Nodo della lista)
 void hashtableDelete(hashtable_t *hashtbl, linkedListNode_t *x);      // Eliminazione --> non richiesta ma per correttezza
 void hashtablePrint(hashtable_t *hashtbl);                            // Stampa: implementata
-bool hashtableTest();                                                 // da Vedere...
+bool hashtableTest();                                                 // finita
 void hashtableFree(hashtable_t *hashtbl);                             // finita
 
 void printUniverso(int *A, int dim) // Pattern For-Each di stampa degli elementi di un array
@@ -82,43 +83,44 @@ int main(void)
     hashtable_t *HT = NULL;  // Creo sullo STACK un puntatore ad una hashtable che si trova sullo HEAP
     HT = createHashtable(m); // Creo la HT
 
-    int Universo[SIZE_UNIVERSO] = {16, 12, 25, 39, 6, 122, 5, 68, 75}; // (Dominio), mentre i nodi delle liste formano il CODOMINIO
-    printf("\nQueste sono le chiavi che voglio mappare nella tabella hash:\n");
+    // int Universo[SIZE_UNIVERSO] = {16, 12, 25, 39, 6, 122, 5, 68, 75}; // (Dominio), mentre i nodi delle liste formano il CODOMINIO
+    int Universo[SIZE_UNIVERSO] = {26, 17, 41, 14, 21, 30, 47, 10, 16, 19, 23, 28, 38, 7, 12, 15, 20, 35, 39, 3};
+
+    fprintf(stdout, "\nQueste sono le chiavi che voglio mappare nella tabella hash:\n");
     printUniverso(Universo, SIZE_UNIVERSO);
 
     // INSERIMENTO
     for (int i = 0; i < SIZE_UNIVERSO; i++)
         hashtableInsert(HT, Universo[i]);
-    printf("\n---------- TABELLA HASH DOPO INSERIMENTO DEI NODI ----------\n");
+    fprintf(stdout, "\n---------- TABELLA HASH DOPO INSERIMENTO DEI NODI ----------\n");
     hashtablePrint(HT); // Stampo la HT dopo l'inserimento di queste chiavi
+    fprintf(stdout, "\nDimensione Hash Table dopo inserimento dei nodi:\t%d\n", HT->size);
 
     // RICERCA DI UN ELEMENTO (contenuto in un nodo di una delle s liste collegate )
     int chiaveDiRicerca = 0;
-    printf("Inserire una chiave da ricercare nella HT: ");
+    fprintf(stdout, "Inserire una chiave da ricercare nella HT: ");
     fscanf(stdin, "%d", &chiaveDiRicerca);
     linkedListNode_t *nodoDaRicercare = hashtableSearch(HT, chiaveDiRicerca);
     if (nodoDaRicercare != NULL)
-        printf("Elemento trovato: %d\n", nodoDaRicercare->value);
+        fprintf(stdout, "Elemento trovato: %d\n", nodoDaRicercare->value);
     else
-        printf("Elemento non trovato.\n");
+        fprintf(stdout, "Elemento non trovato.\n");
 
     // ELIMINAZIONE DI UN ELEMENTO:
-    printf("Inserire il nodo da cercare e, successivamente eliminare: ");
-    scanf("%d", &chiaveDiRicerca);
+    fprintf(stdout, "Inserire il nodo da cercare e, successivamente eliminare: ");
+    fscanf(stdin, "%d", &chiaveDiRicerca);
     linkedListNode_t *nodoDaEliminare = hashtableSearch(HT, chiaveDiRicerca);
     while (!nodoDaEliminare) // Deve esistere per poterlo eliminare
     {
-        printf("\nL'elemento che si vuole eliminare non è presente nella HT\n\n");
-        printf("Inserire il nodo da cercare e, successivamente eliminare: ");
+        fprintf(stdout, "\nL'elemento che si vuole eliminare non è presente nella HT\n\n");
+        fprintf(stdout, "Inserire il nodo da cercare e, successivamente eliminare: ");
         scanf("%d", &chiaveDiRicerca);
         nodoDaEliminare = hashtableSearch(HT, chiaveDiRicerca);
     }
     printf("\n---------- TABELLA HASH DOPO ELIMINAZIONE DEL NODO %d ----------\n", nodoDaEliminare->value);
     hashtableDelete(HT, nodoDaEliminare); // Arrivato qui, il nodo da eliminare esiste proseguo con la sua eliminazione
     hashtablePrint(HT);                   // Stampo la HT dopo l'eliminazione di uno dei nodi
-    // free(nodoDaRicercare);
-    // free(nodoDaEliminare);
-    hashtableFree(HT); // Ho finito di usare la HT, allora elimino tutte le liste, le entry e infine la HT
+    hashtableFree(HT);                    // Ho finito di usare la HT, allora elimino tutte le liste, le entry e infine la HT
     return 0;
 }
 
@@ -196,7 +198,6 @@ void linkedListFree(linkedList_t *list)
 }
 
 // #####################################################################################################################
-/* DISEGNARE QUESTIONE PUNTATORI:  */
 hashtable_t *createHashtable(const unsigned int s) // s è il numero di entries della HT. HT è un array di puntatori
 {
     unsigned int i;
@@ -254,7 +255,7 @@ void hashtablePrint(hashtable_t *hashtbl) // implementata
     }
 }
 
-bool hashtableTest() // Da fare
+bool hashtableTest() // Vedere file testHashTable
 {
     return true;
 }
