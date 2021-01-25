@@ -442,4 +442,12 @@ bool rbtProprieta_5(rbt_t *rbt);
  */
 clock_t doExperiment(int *, const unsigned int, const unsigned int, char *);
 
+// Aggiungo questa per vedere se è la causa che rallenta l'rbt
+/**
+* @brief Ricerca Ricorsiva in un RBT: la faccio per vedere se è questa la causa di mal-funzionamento
+* @param rbt albero in cui effettuare la ricerca
+* @param x radice del sottoalbero in cui richiamarsi
+* @param v chiave da ricercare 
+*/
+rbtNode_t *rbtSearchRicorsiva(rbt_t *rbt, rbtNode_t *x, const int v);
 // Fine CORE FUNCTIONS

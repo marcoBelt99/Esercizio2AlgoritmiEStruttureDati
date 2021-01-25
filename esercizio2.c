@@ -889,3 +889,14 @@ bool rbtHasBstProperty_Iterativa(rbt_t *rbt) // !!!Non propriamente corretta !!!
 // End of AUXILIARY FUNCTIONS
 
 // Fine IMPLEMENTATION OF THE FUNCTIONS
+
+// Aggiungo funzione ricerca ricorsiva allo scopo di verificare se è questa l'operazione che rallenta
+rbtNode_t *rbtSearchRicorsiva(rbt_t *rbt, rbtNode_t *x, const int v)
+{
+    if (x == rbt->nil || v == x->value)
+        return x;
+    if (v < x->value)
+        return rbtSearchRicorsiva(rbt, x->left, v);
+    else
+        return rbtSearchRicorsiva(rbt, x->right, v);
+}

@@ -30,6 +30,13 @@ void rbtRightRotate(rbt_t *, rbtNode_t *);
 void rbtInsert(rbt_t *, rbtNode_t *);
 void rbtInsertFixup(rbt_t *, rbtNode_t *);
 rbtNode_t *rbtSearch(rbt_t *, const int);
+/**
+* @brief Ricerca Ricorsiva in un RBT: la faccio per vedere se è questa la causa di mal-funzionamento
+* @param rbt albero in cui effettuare la ricerca
+* @param x radice del sottoalbero in cui richiamarsi
+* @param v chiave da ricercare 
+*/
+rbtNode_t *rbtSearchRicorsiva(rbt_t *, rbtNode_t *, const int);
 void rbtInOrder(rbt_t *, rbtNode_t *);
 bool rbtTest();
 bool isRbt(rbt_t *);
@@ -86,7 +93,8 @@ int main()
     printf("Inserire il valore da cercare: "); // Richiedo il valore da cercare all'utente
     scanf("%d", &chiave);
 
-    trovato = rbtSearch(T, chiave); // Versione iterativa (quella ricorsiva non mi veniva)
+    // trovato = rbtSearch(T, chiave); // Versione iterativa (quella ricorsiva non mi veniva)
+    trovato = rbtSearchRicorsiva(T, T->root, chiave); // Provo questa versione
     if (trovato->value == chiave)
         printf("Trovato\n");
     else
@@ -282,32 +290,32 @@ void rbtRightRotate(rbt_t *rbt, rbtNode_t *x) // Basta scambiare left con right
 /* void rbtInsertFixupLeft(rbt_t *rbt, rbtNode_t *z) // !!! Versione fixup left-right Non corretta... !!!
 {
 
-    rbtNode_t *y = z->parent->parent->right; //uncle of z
+    rbtNode_t *y = z->parent->parent->right; 
 
     if (y->color == RED)
-    { //case 1
+    { 
         z->parent->color = BLACK;
         y->color = BLACK;
         z->parent->parent->color = RED;
         z = z->parent->parent;
     }
     else
-    { //case2 or case3
+    { 
         if (z == z->parent->right)
-        {                  //case2
-            z = z->parent; //marked z.parent as new z
+        {                  
+            z = z->parent; 
             rbtLeftRotate(rbt, z);
         }
-        //case3
-        z->parent->color = BLACK;         //made parent black
-        z->parent->parent->color = BLACK; //made parent red
+        
+        z->parent->color = BLACK;         
+        z->parent->parent->color = BLACK; 
         rbtRightRotate(rbt, z->parent->parent);
     }
 }
 
 void rbtInsertFixupRight(rbt_t *rbt, rbtNode_t *z) // Con queste non funzionano i colori
 {
-    rbtNode_t *y = z->parent->parent->left; //uncle of z
+    rbtNode_t *y = z->parent->parent->left; 
 
     if (y->color == RED)
     {
@@ -320,11 +328,11 @@ void rbtInsertFixupRight(rbt_t *rbt, rbtNode_t *z) // Con queste non funzionano 
     {
         if (z == z->parent->left)
         {
-            z = z->parent; //marked z.parent as new z
+            z = z->parent; 
             rbtRightRotate(rbt, z);
         }
-        z->parent->color = BLACK;       //made parent black
-        z->parent->parent->color = RED; //made parent red
+        z->parent->color = BLACK;       
+        z->parent->parent->color = RED; 
         rbtLeftRotate(rbt, z->parent->parent);
     }
 }
@@ -333,10 +341,10 @@ void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z)
 {
     while (z->parent->color == RED)
     {
-        if (z->parent == z->parent->parent->left) //z.parent is the left child
+        if (z->parent == z->parent->parent->left) 
             rbtInsertFixupLeft(rbt, z);
         else
-            rbtInsertFixupRight(rbt, z); //z.parent is the right child
+            rbtInsertFixupRight(rbt, z); 
     }
     rbt->root->color = BLACK;
 }
@@ -348,7 +356,7 @@ void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z) // Con questa funziona perfettamen
         while (z->parent->color == RED)
         {
             if (z->parent == z->parent->parent->left)
-            { //z.parent is the left child
+            {
 
                 rbtNode_t *y = z->parent->parent->right; // y è lo zio del nodo z appena inserito
 
@@ -373,7 +381,7 @@ void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z) // Con questa funziona perfettamen
                 }
             }
             else
-            {                                           //z.parent is the right child
+            {
                 rbtNode_t *y = z->parent->parent->left; // y è lo zio di z
 
                 if (y->color == RED) // Se lo zio è rosso
@@ -426,7 +434,7 @@ void rbtInsert(rbt_t *rbt, rbtNode_t *z)
         {
             rbt->root = z; // Il nuovo nodo è la radice
         }
-        else if (z->value < y->value) 
+        else if (z->value < y->value)
             y->left = z;
         else
             y->right = z;
@@ -944,4 +952,14 @@ void rbtFree(rbt_t *rbt)
         fprintf(stderr, "rbtFree: Errore puntatori NULL\n");
         exit(EXIT_FAILURE);
     }
+}
+
+rbtNode_t *rbtSearchRicorsiva(rbt_t *rbt, rbtNode_t *x, const int v)
+{
+    if (x == rbt->nil || v == x->value)
+        return x;
+    if (v < x->value)
+        return rbtSearchRicorsiva(rbt, x->left, v);
+    else
+        return rbtSearchRicorsiva(rbt, x->right, v);
 }

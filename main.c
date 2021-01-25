@@ -36,7 +36,7 @@ const unsigned int MAX_OPERATIONS = 10000;     // Maximum number of operations.
 const unsigned int STEP = 150;                 // Step dell'esperimento.
 const unsigned int NUM_EXPERIMENTS = 200;      // Numero di esperimenti.
 const unsigned int PERCENTAGE_INSERTIONS = 60; // Percentuale di operazioni di inserimento.
-const unsigned int NUM_ENTRIES = 10;           // Dimensione della HT.
+const unsigned int NUM_ENTRIES = 1;            // Dimensione della HT.
 const bool TEST_DATA_STRUCTURES = true;        // Test strutture dati?
 const unsigned int NUM_ELEMENTS_FOR_TEST = 10; // Numero di elementi per testarle.
 const outputEnum_t outputType = ONCONSOLE;     // Tipo di output.
@@ -47,6 +47,7 @@ void printArray(int *A, const int n);
 int main(void)
 {
     srand(RANDOM_SEED); // Inizializzo il seed casuale.
+
     // Le prossime 4 variabili le uso per ospitare il risultato dei calcoli per l'esperimento
     clock_t timeHashtable = 0;      // Tempo trascorso per la HashTable.
     clock_t timeRbt = 0;            // Tempo trascorso per l' RBT.
@@ -226,7 +227,8 @@ clock_t doExperiment(int *randomArray, const unsigned int numInsertions, const u
         // printf("\nChiave di ricerca:\t%d\n", chiaveDiRicerca); // scopo di correttezza
 
         //Ricerca
-        nodoRbt = rbtSearch(T, chiaveDiRicerca);
+        // nodoRbt = rbtSearch(T, chiaveDiRicerca); // vedo se è questo che rallenta...
+        nodoRbt = rbtSearchRicorsiva(T, T->root, chiaveDiRicerca); // Provo questa versione
         tempoFine = clock();
 
         rbtFree(T);
