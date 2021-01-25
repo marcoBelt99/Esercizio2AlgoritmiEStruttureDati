@@ -13,7 +13,7 @@ In particolare, in questo repository si trovano le implementazioni di:
 
 Ho separato il codice in 6 file principali che servono per gestire l'esericizio:
 
-- [main.c](): contenente il programma da cui far partire l'esercizio.
+- [main.c](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/main.c): contenente il programma da cui far partire l'esercizio.
 - [esercizio2.c](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/esercizio2.c):       contenente la definizione delle funzioni richieste (eccetto quelle di test: "hashtableTest" e "rbtTest") ed altre mie funzioni aggiuntive.
 - [esercizio2.h](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/esercizio2.h):       contenente la dichiarazione di tali funzioni; sono presenti anche le definizioni dei tipi rappresentanti le strutture dati utilizzate.
 - [testHashTable.c](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/testHashTable.c):    contenente la definizione della funzione "hashtableTest".
@@ -32,6 +32,7 @@ Ogni esecuzione è accompagnata dal "memcheck" effettuato da valgrid, avente lo 
 
 # Compilazione - linking - eseguibile
 In prima istanza bisognerà assicurarsi di essere all'interno della propria directory di lavoro (quella contenente tutti i file sorgenti menzionati sopra).
-Per compilare, effettuare il linking, e dunque ottenere il file eseguibile, digitare, da terminale, il comando: `make` .
-Per eseguire il file, in ambiente Unix, digitare, da terminale: `./Esercizio2`.
+- Per compilare, effettuare il linking, e dunque ottenere il file eseguibile, digitare, da terminale, il comando: `make` .
+- Per eseguire il file, in ambiente Unix, digitare, da terminale: `./Esercizio2`.
+- Per rimuovere i file .o dal direttorio, dare il comando: `make clean`.
 
