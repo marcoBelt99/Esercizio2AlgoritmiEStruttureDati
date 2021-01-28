@@ -4,13 +4,10 @@
     Nota sulla variabili/costanti utilizzate
  ********************************************/
 // HT:              è la hash table su cui operare
-// SIZE_UNIVERSO:   è la dimensione del vettore 'Universo'
 // m:               è la dimensione della Hash Table (ossia il numero di 'Caselle' di cui è composta)
 // Universo[]:      è il dominio, ossia l'insieme di chiavi che voglio mappare in HT. Ha dimensione prefissata SIZE_UNIVERSO
 // nodoDiRicerca:   è il nodo da ricercare risultante dalla ricerca. Lo utilizzo sia per ricerca che per eliminazione
 // chiaveDiRicerca: è la chiave che si vuole ricercare. La utilizzo per entrambe le operazioni di ricerca ed eliminazione
-
-// #define SIZE_UNIVERSO 10
 
 /* void printUniverso(int *A, int dim) // Pattern For-Each di stampa degli elementi di un array
 {
@@ -38,7 +35,6 @@
 bool hashtableTest()
 {
     // Parametri controllo automatico ai fini della funzione test
-    int SIZE_UNIVERSO = 20;
     int chiaveDiRicerca = 47;
     unsigned int m = 10; // Dimensione della hashtable: La setto in automatico ai fini della funzione di test
 
@@ -51,7 +47,7 @@ bool hashtableTest()
     // (DOMINIO), mentre i nodi delle liste formano il CODOMINIO
     // int Universo[] = {16, 12, 25, 39, 6, 122, 5, 68, 75, 10};
     int Universo[] = {26, 17, 41, 14, 21, 30, 47, 10, 16, 19, 23, 28, 38, 7, 12, 15, 20, 35, 39, 3};
-    /* Questo codice è commentato per non "sporcare lo stdoutput" 
+    /* // Questo codice è commentato per non "sporcare lo stdoutput" 
     printf("\nQueste sono le chiavi che voglio mappare nella tabella hash:\n");
     printUniverso(Universo, SIZE_UNIVERSO); 
     */
@@ -74,7 +70,7 @@ bool hashtableTest()
     }
 
     // INSERIMENTO
-    for (int i = 0; i < SIZE_UNIVERSO; i++)
+    for (unsigned int i = 0; i < NUM_ELEMENTS_FOR_TEST; i++) // SIZE_UNIVERSO
     {
         hashtableInsert(HT, Universo[i]);
         if (HT->entry[hashFunction(HT, i)] == NULL) // Almeno una casella della HT deve puntare ad un elemento di tipo lista contenente Universo[i]
@@ -103,9 +99,8 @@ bool hashtableTest()
         fprintf(stderr, "Nodo non trovato...\n");
         // exit(EXIT_FAILURE);
     }
-   /*  else
+    /*  else
         fprintf(stdout, "Trovato\n"); */
-    
 
     // ELIMINAZIONE DI UN ELEMENTO:
     /* // Questo codice è commentato per non "sporcare lo stdoutput"
@@ -132,7 +127,6 @@ bool hashtableTest()
     hashtableDelete(HT, nodoDaRicercare); // Solo per automatizzare funzione test
 
     sizeListaDopoEliminazione = HT->entry[hashFunction(HT, chiaveDiRicerca)]->list->size; // Mi salvo la dimensione della lista dopo l'eliminazione del nodo dalla lista
-    // if ((nodoDaEliminare->prev != NULL) || (nodoDaEliminare->next != NULL) || (sizeListaPrimaDiEliminare <= sizeListaDopoEliminazione))
 
     if ((nodoDaRicercare->prev != NULL) || (nodoDaRicercare->next != NULL) || (sizeListaPrimaDiEliminare <= sizeListaDopoEliminazione)) // Solo per automatizzare funzione test
     {
@@ -140,9 +134,8 @@ bool hashtableTest()
         // exit(EXIT_FAILURE);
         return false;
     }
-    
-    // hashtablePrint(HT); // Stampo la HT dopo l'eliminazione di uno dei nodi
-    
+
+    // hashtablePrint(HT); // Stampo la HT dopo l'eliminazione di uno dei nodi. Questo codice è commentato per non "sporcare lo stdoutput"
     // free(nodoDaRicercare);
     // free(nodoDaEliminare);
     hashtableFree(HT); // Ho finito di usare la HT, allora elimino tutte le liste, le entry e infine la HT

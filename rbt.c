@@ -22,6 +22,12 @@ typedef struct rbt_t
     int size; //MODIFICATO QUI
 } rbt_t;
 
+typedef struct rbtTestStructure_t // test per l'RBT
+{
+    int *A;    // Array that contains the in order visit values of the RBT.
+    int index; // Current index of the array.
+} rbtTestStructure_t;
+
 // ******************* DICHIARAZIONE FUNZIONI *******************
 rbtNode_t *createRbtNode(const int);
 rbt_t *createRbt();
@@ -42,10 +48,12 @@ bool rbtTest();
 bool isRbt(rbt_t *);
 bool rbtHasBstProperty(rbt_t *);
 int rbtComputeBlackHeight(rbt_t *, rbtNode_t *);
+int rbtComputeBlackHeightRicorsiva(rbt_t *rbt, rbtNode_t *x); // aggiunta
 void rbtFreeNodes(rbt_t *, rbtNode_t *);
 void rbtFree(rbt_t *);
 //Dichiarazione funzioni Ausiliarie
 void stampaAltezzaNeraPreOrder(rbt_t *rbt, rbtNode_t *x);
+void stampaAltezzaNeraPreOrderRicorsiva(rbt_t *rbt, rbtNode_t *x);
 void inorderToArray(rbt_t *rbt, rbtNode_t *x, rbtNode_t **Nodi, int *i);
 void clearScreen();
 rbtNode_t *rbtMinimum(rbt_t *rbt);
@@ -61,6 +69,16 @@ bool rbtProprieta_3(rbt_t *rbt);
 bool rbtProprieta_4(rbt_t *rbt);
 bool rbtProprieta_5(rbt_t *rbt);
 
+int rbtComputeBlackHeight(rbt_t *rbt, rbtNode_t *x)
+{
+    if(x == rbt->nil)
+        return 0;
+    int lbh = rbtComputeBlackHeight(rbt, x->left);
+    int rbh = rbtComputeBlackHeight(rbt, x->right);
+    if(lbh == -1 || rbh == -1 || lbh != rbh)
+        return -1 ;
+    return lbh + (x->color == BLACK ? 1 : 0);
+}
 // ******************* MAIN *******************
 int main()
 {
@@ -91,10 +109,10 @@ int main()
     printf("\n******************** RBT SEARCH ********************\n");
     rbtNode_t *trovato = T->nil;               // Questo nodo conterrà il risultao della Ricerca
     printf("Inserire il valore da cercare: "); // Richiedo il valore da cercare all'utente
-    scanf("%d", &chiave);
-
-    // trovato = rbtSearch(T, chiave); // Versione iterativa (quella ricorsiva non mi veniva)
-    trovato = rbtSearchRicorsiva(T, T->root, chiave); // Provo questa versione
+    fscanf(stdin,"%d", &chiave);
+    // chiave = 47;
+    trovato = rbtSearch(T, chiave); // Versione iterativa (quella ricorsiva non mi veniva)
+    //trovato = rbtSearchRicorsiva(T, T->root, chiave); // Provo questa versione
     if (trovato->value == chiave)
         printf("Trovato\n");
     else
@@ -114,7 +132,8 @@ int main()
     // Mi occupo di verificare l'Altezza Nera di ogni nodo, attraverso un attraversamento preOreder (risultante più comodo)
     printf("\n******************** ALTEZZA ALBERO ********************\n");
     printf("Visualizzo altezza albero (visitandolo in PreOrder):\n");
-    stampaAltezzaNeraPreOrder(T, T->root); // Perfezionamento della funzione di attraversamento preOrder
+    //stampaAltezzaNeraPreOrder(T, T->root); // Perfezionamento della funzione di attraversamento preOrder
+    stampaAltezzaNeraPreOrder(T, T->root);
     sleep(1);
 
     // Mi occupo di verificare le proprietà dell'albero
@@ -187,13 +206,7 @@ int main()
     // A questo punto, Libero la memoria allocata precedentemente con la malloc in fase di creazione
     rbtFree(T);
 
-    if ((T->root == NULL) && (T->nil == NULL)) // Ok non ci sono più memory leaks
-        printf("Ripulito completamente\n");
-    else
-        printf("C'è qualche altro nodo da ripulire\n");
-    printf("Dimensione in memoria di un nodo: %ld\n", sizeof(rbtNode_t));
-    printf("Dimensione in memoria di un albero: %ld\n", sizeof(rbt_t));
-    free(T); // Libero la memoria dell'albero
+    
     return 0;
 }
 
@@ -209,17 +222,21 @@ rbtNode_t *createRbtNode(const int v)
 }
 rbt_t *createRbt()
 {
-    rbt_t *T = malloc(sizeof(rbt_t));               // Alloco nello HEAP lo spazio necessario per una struttura rbt_t
-    rbtNode_t *nodoNIL = malloc(sizeof(rbtNode_t)); // Alloco nello HEAP lo spazio necessario per il nodo T.NIL
+    rbt_t *T = malloc(sizeof(rbt_t)); // Alloco nello HEAP lo spazio necessario per una struttura rbt_t
 
+    // Commentare questo per provare il suggerimento di Eduard
+    rbtNode_t *nodoNIL = malloc(sizeof(rbtNode_t));          // Alloco nello HEAP lo spazio necessario per il nodo T.NIL
     nodoNIL->left = nodoNIL->right = nodoNIL->parent = NULL; // Inizializzo i suoi puntatori
     nodoNIL->color = BLACK;                                  // Il suo colore DEVE SEMPRE essere NERO
     nodoNIL->value = 0;                                      // Inizializzo la sua chiave a 0 (anche se non ne ha bisogno in realtà)
+    T->nil = nodoNIL;                                        // Assegno questo nodo speciale al campo nil dell'albero appena allocato
 
-    T->nil = nodoNIL; // Assegno questo nodo speciale al campo nil dell'albero appena allocato
-    T->root = T->nil; // Inizialmente, la radice dell'albero punta a questo nuovo nodo
-    T->size = 0;      // Inizialmente la dimensione dell'albero è nulla: nessun nodo è ancora stato inserito
-    return T;         // Ritorno il nuovo albero Red Black appena creato
+    // T->nil = createRbtNode(0); // Suggerimento di Eduard: però --> Ottengo il solito segfault nel fixup
+
+    T->root = T->nil; // Inizialmente, la radice dell'albero punta a questo nuovo nodo (GIUSTO)
+    T->root->parent = T->nil;
+    T->size = 0; // Inizialmente la dimensione dell'albero è nulla: nessun nodo è ancora stato inserito
+    return T;    // Ritorno il nuovo albero Red Black appena creato
 }
 
 // Inserimento
@@ -287,35 +304,36 @@ void rbtRightRotate(rbt_t *rbt, rbtNode_t *x) // Basta scambiare left con right
         exit(EXIT_FAILURE);
     }
 } // fine rbtRightRotate
-/* void rbtInsertFixupLeft(rbt_t *rbt, rbtNode_t *z) // !!! Versione fixup left-right Non corretta... !!!
+  /*
+void rbtInsertFixupLeft(rbt_t *rbt, rbtNode_t *z) // !!! Versione fixup left-right Non corretta... !!!
 {
 
-    rbtNode_t *y = z->parent->parent->right; 
+    rbtNode_t *y = z->parent->parent->right;
 
     if (y->color == RED)
-    { 
+    {
         z->parent->color = BLACK;
         y->color = BLACK;
         z->parent->parent->color = RED;
         z = z->parent->parent;
     }
     else
-    { 
+    {
         if (z == z->parent->right)
-        {                  
-            z = z->parent; 
+        {
+            z = z->parent;
             rbtLeftRotate(rbt, z);
         }
-        
-        z->parent->color = BLACK;         
-        z->parent->parent->color = BLACK; 
+
+        z->parent->color = BLACK;
+        z->parent->parent->color = BLACK;
         rbtRightRotate(rbt, z->parent->parent);
     }
 }
 
 void rbtInsertFixupRight(rbt_t *rbt, rbtNode_t *z) // Con queste non funzionano i colori
 {
-    rbtNode_t *y = z->parent->parent->left; 
+    rbtNode_t *y = z->parent->parent->left;
 
     if (y->color == RED)
     {
@@ -328,11 +346,11 @@ void rbtInsertFixupRight(rbt_t *rbt, rbtNode_t *z) // Con queste non funzionano 
     {
         if (z == z->parent->left)
         {
-            z = z->parent; 
+            z = z->parent;
             rbtRightRotate(rbt, z);
         }
-        z->parent->color = BLACK;       
-        z->parent->parent->color = RED; 
+        z->parent->color = BLACK;
+        z->parent->parent->color = RED;
         rbtLeftRotate(rbt, z->parent->parent);
     }
 }
@@ -341,14 +359,15 @@ void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z)
 {
     while (z->parent->color == RED)
     {
-        if (z->parent == z->parent->parent->left) 
+        if (z->parent == z->parent->parent->left) // Errore qui. Ottengo un Segmentation Fault Col metodo di creazione T->root di Eduard
             rbtInsertFixupLeft(rbt, z);
         else
-            rbtInsertFixupRight(rbt, z); 
+            rbtInsertFixupRight(rbt, z);
     }
     rbt->root->color = BLACK;
 }
 */
+
 void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z) // Con questa funziona perfettamente
 {
     if (rbt && z) // Controllo validità puntatori
@@ -384,7 +403,7 @@ void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z) // Con questa funziona perfettamen
             {
                 rbtNode_t *y = z->parent->parent->left; // y è lo zio di z
 
-                if (y->color == RED) // Se lo zio è rosso
+                if (y->color == RED) // Se lo zio è rosso: Eccezione Qui --> Segfault
                 {
                     z->parent->color = BLACK; // Ricolora
                     y->color = BLACK;
@@ -413,6 +432,73 @@ void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z) // Con questa funziona perfettamen
         exit(EXIT_FAILURE);
     }
 } // fine rbtInsertFixup
+/*
+void rbtInsertFixup(rbt_t *rbt, rbtNode_t *z) // Modificata
+{
+    if (rbt && z) // Controllo validità puntatori
+    {
+        rbtNode_t *y = rbt->nil; // Dichiaro qua sopra il nodo y
+        while (z->parent->color == RED)
+        {
+            if (z->parent == z->parent->parent->left)
+            {
+
+                y = z->parent->parent->right; // y è lo zio del nodo z appena inserito
+
+                if (y->color == RED)
+                {                             // Caso 1
+                    z->parent->color = BLACK; // padre diventa nero
+                    y->color = BLACK;
+                    z->parent->parent->color = RED; // il nonno diventa rosso
+                    z = z->parent->parent;          // continua sistemando i nonni (vai verso l'alto)
+                }
+                else
+                {                              // Caso 2 o caso 3
+                    if (z == z->parent->right) // Sono nel figlio destro?
+                    {                          // Caso 2
+                        z = z->parent;         // il nuovo z è z.parent
+                        rbtLeftRotate(rbt, z);
+                    }
+                    // Caso 3
+                    z->parent->color = BLACK;       // padre nero
+                    z->parent->parent->color = RED; // nonno rosso
+                    rbtRightRotate(rbt, z->parent->parent);
+                }
+            }
+            else
+            {
+                y = z->parent->parent->left; // y è lo zio di z
+
+                if (y && y->color == RED) // Se lo zio è rosso: Eccezione Qui --> Segfault
+                {
+                    z->parent->color = BLACK; // Ricolora
+                    y->color = BLACK;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
+                }
+                else
+                {
+                    if (z == z->parent->left)
+                    {
+                        z = z->parent; // z è diventato suo padre
+                        rbtRightRotate(rbt, z);
+                    }
+                    z->parent->color = BLACK;       // padre nero
+                    z->parent->parent->color = RED; // nonno rosso
+                    rbtLeftRotate(rbt, z->parent->parent);
+                }
+            }
+        }
+        rbt->root->color = BLACK; // La radice deve sempre essere NERA
+
+    } // fine controllo validità puntatori
+    else
+    {
+        fprintf(stderr, "rbtInsertFixup: Errore, puntatori NULL\n");
+        exit(EXIT_FAILURE);
+    }
+} // fine rbtInsertFixup
+*/
 void rbtInsert(rbt_t *rbt, rbtNode_t *z)
 {
     if (rbt && z) // Controllo validità puntatori
@@ -496,40 +582,45 @@ rbtNode_t *rbtSearch(rbt_t *T, const int v) // Ho seguito l'algoritmo non ricors
 } // fine ricerca
 
 // Altezza nera
-int rbtComputeBlackHeightRicorsiva(rbt_t *rbt, rbtNode_t *x) // !!! Pare non funzionare !!!
+/* int rbtComputeBlackHeightRicorsiva(rbt_t *rbt, rbtNode_t *x) // !!! Pare non funzionare !!!
 {
     if (rbt && x) // Controllo validità dei puntatori
     {
         if (x == rbt->nil) // L'altezza nera dei nodi T->NIL è sempre 0
-            return 0;
+            return 1;
         /* if (x == rbt->nil || x->color == RED)
         return 1; */
 
-        int altezzaNeraSinstra = rbtComputeBlackHeightRicorsiva(rbt, x->left); // Mi richiamo ricorsivamente sulla parte sinistra
+        /* int altezzaNeraSinstra = rbtComputeBlackHeightRicorsiva(rbt, x->left); // Mi richiamo ricorsivamente sulla parte sinistra
         int altezzaNeraDestra = rbtComputeBlackHeightRicorsiva(rbt, x->right); // e destra (il calcolo lo fanno le chiamate ricorsive)
-
-        int contatore = 0; // andrà sommato ad una delle due altezze nere
+ */
+        /*  // int contatore = 0; // andrà sommato ad una delle due altezze nere
         if (x->color == BLACK)
             contatore++;
         else
-            contatore = 0;
+            contatore = 0; */
         // La correttezza vuole che a sinistra e a destra io abbia lo stesso numero di nodi neri
-        if (altezzaNeraSinstra == -1 || altezzaNeraDestra == -1 || altezzaNeraSinstra != altezzaNeraDestra)
+        /* if (altezzaNeraSinstra < 0 || altezzaNeraDestra < 0 || altezzaNeraSinstra != altezzaNeraDestra)
             return -1;
         else
-            return altezzaNeraSinstra + contatore;
+        {
+            if (x->color == BLACK)
+                return altezzaNeraSinstra + 1; // Ok è nero, mi interessa
+            else
+                return altezzaNeraSinstra + 0; // Se è rosso non mi interessa
+        }
     }
     else
     {
         fprintf(stderr, "rbtComputeBlackHeightRicorsiva: errore Puntatori NULL\n");
         exit(EXIT_FAILURE);
-    }
-} // fine rbtComputeBlackHeightRicorsiva
-int rbtComputeBlackHeight /* _Iterativa */ (rbt_t *rbt, rbtNode_t *x) // Calcolo dell'altezza nera di un dato nodo x dell'rbt
-{
-    if (rbt && x) // Controllo validità dei puntatori
+    } */
+//} // fine rbtComputeBlackHeightRicorsiva */
+/* int rbtComputeBlackHeight /* _Iterativa */ // (rbt_t *rbt, rbtNode_t *x) // Calcolo dell'altezza nera di un dato nodo x dell'rbt
+// {
+    // if (rbt && x) // Controllo validità dei puntatori
 
-    {
+    /* {
         int altezzaNeraSinstra = 0;
         int altezzaNeraDestra = 0;
         if (x == rbt->nil)
@@ -565,8 +656,8 @@ int rbtComputeBlackHeight /* _Iterativa */ (rbt_t *rbt, rbtNode_t *x) // Calcolo
     {
         fprintf(stderr, "rbtComputeBlackHeight: Errore puntatori NULL\n");
         exit(EXIT_FAILURE);
-    }
-} // fine rbtComputeBlackHeight
+    } */
+// } // fine rbtComputeBlackHeight */
 void stampaAltezzaNeraPreOrder(rbt_t *rbt, rbtNode_t *x) // Stampa altezza nera di ogni nodo con visita PreOrder
 {
     if (x != rbt->nil)
@@ -576,6 +667,16 @@ void stampaAltezzaNeraPreOrder(rbt_t *rbt, rbtNode_t *x) // Stampa altezza nera 
         stampaAltezzaNeraPreOrder(rbt, x->right);
     }
 }
+
+/* void stampaAltezzaNeraPreOrderRicorsiva(rbt_t *rbt, rbtNode_t *x) // Stampa altezza nera di ogni nodo con visita PreOrder
+{
+    if (x != rbt->nil)
+    {
+        fprintf(stdout, "Nodo:\t%d\tcolore:\t%c\tAltezza Nera:\t%d\n", x->value, (x->color == RED) ? 'R' : 'B', rbtComputeBlackHeightRicorsiva(rbt, x));
+        stampaAltezzaNeraPreOrderRicorsiva(rbt, x->left);
+        stampaAltezzaNeraPreOrderRicorsiva(rbt, x->right);
+    }
+} */
 
 // Funzioni ausiliarie e propedeutiche per vedere le proprietà dell'albero
 void inorderToArray(rbt_t *rbt, rbtNode_t *x, rbtNode_t **Nodi, int *i)
@@ -617,7 +718,65 @@ bool rbtHasBstProperty_Iterativa(rbt_t *rbt) // !!!Non propriamente corretta !!!
     }
     return true;
 }
+
+bool isSorted(const int *A, const int n) // Già implementata
+{
+    // For each i in 0..n-2, if the current element is greater than the next one,
+    // then it is unsorted.
+    for (int i = 0; i < n - 1; i++)
+        if (A[i] > A[i + 1])
+            return false;
+    // Otherwise it is.
+    return true;
+}
+
+// Nuove funzioni
+void rbtHasBstPropertyUtil(rbt_t *rbt, rbtNode_t *x, rbtTestStructure_t *test) // Non l'ho prevista
+{
+    if (x != rbt->nil)
+    { // Bisogna fare attenzione a come si comporta il flusso di esecuzione del programma
+        // stando attenti all'ordine di creazione / distruzione dei record di attivazine
+        rbtHasBstPropertyUtil(rbt, x->left, test);  // Richiamati ricorsivamente sul sottoalbero sinistro
+        test->A[(test->index++)] = x->value;        // (stampa) --> Salva in posizione i++
+        rbtHasBstPropertyUtil(rbt, x->right, test); // Richiamati ricorsivamente sul sottoalbero destro
+    }
+}
+
 bool rbtHasBstProperty(rbt_t *rbt)
+{
+    if (rbt)
+    {
+        rbtTestStructure_t *test = NULL;
+
+        // Alloco la memoria
+        test = malloc(sizeof(test));               // per la struttura in sè
+        test->A = malloc(sizeof(int) * rbt->size); // per il vettore che contiene i valori del campo x->value del nodo dell'albero
+        // test->index = malloc(sizeof(int));
+        test->index = 0; // Inializzo l'indice del vettore a 0, si incrementerà ad ogni chiamata ricorsiva
+
+        // Chiamo la procedura
+        rbtHasBstPropertyUtil(rbt, rbt->root, test);
+
+        // Controllo effettivo ordinamento dell'array della struttura
+        if (!isSorted(test->A, test->index))
+        {
+            fprintf(stderr, "rbtHasBstProperty: Errore, Array non ordinato\n");
+            return false;
+        }
+
+        // Libero la memoria
+        // free(test->index);
+        free(test->A);
+        free(test);
+        return true;
+    }
+    else
+    {
+        fprintf(stderr, "rbtHasBstProperty: Errore, puntatore NULL\n");
+        exit(EXIT_FAILURE);
+    }
+}
+bool rbtHasBstPropertyVecchia(rbt_t *rbt)
 {
     rbtNode_t *Nodi[rbt->size]; // Dichiaro array di nodi
     int i = 0;                  // Variabile contatore
@@ -782,7 +941,7 @@ bool isRbt(rbt_t *rbt)
 {
     if (rbt) // Controllo validità dei puntatori
     {        // (Provare con switch)
-        bool pbst = rbtHasBstProperty(rbt);
+        /* bool pbst = rbtHasBstProperty(rbt); */
         // 1. Ogni nodo è rosso o nero.
         bool p1 = rbtProprieta_1(rbt);
         // 2. La radice è nera
@@ -795,7 +954,7 @@ bool isRbt(rbt_t *rbt)
         //    discendenti contengono lo stesso numero di nodi neri
         bool p5 = rbtProprieta_5(rbt);
 
-        if (pbst && p1 && p2 && p3 && p4 && p5) // and logico di tutte le proprietà
+        if (/* pbst && */ p1 && p2 && p3 && p4 && p5) // and logico di tutte le proprietà
             return true;
         else
             return false;
@@ -915,8 +1074,11 @@ void stampaAltezzaNeraPostOrder(rbt_t *rbt, rbtNode_t *x) // Stampa altezza nera
 }
 
 // Deallocazione memoria precedentemente allocata per nodi e albero
+
+/** @author Eduard */
 void rbtFreeNodes(rbt_t *rbt, rbtNode_t *x)
 {
+    /* VECCHIO (troppo complicato)
     if (rbt && x) // Controllo validità dei puntatori
     {
         if (x == rbt->nil)
@@ -935,9 +1097,21 @@ void rbtFreeNodes(rbt_t *rbt, rbtNode_t *x)
         fprintf(stderr, "rbtFreeNodes: Errore puntatori NULL\n");
         exit(EXIT_FAILURE);
     } // fine rbtFreeNodes
+    */
+
+    // NUOVO
+    if (x != rbt->nil)
+    {
+        rbtFreeNodes(rbt, x->left);
+        rbtFreeNodes(rbt, x->right);
+        free(x);
+    }
 }
+
+/** @author Eduard */
 void rbtFree(rbt_t *rbt)
 {
+    /* VECCHIO (troppo complicato)
     if (rbt) // Controllo validità puntatori
     {
         rbtFreeNodes(rbt, rbt->root); // Prima libero tutti i nodi ricorsivamente
@@ -952,6 +1126,12 @@ void rbtFree(rbt_t *rbt)
         fprintf(stderr, "rbtFree: Errore puntatori NULL\n");
         exit(EXIT_FAILURE);
     }
+    */
+
+    // NUOVO
+    rbtFreeNodes(rbt, rbt->root);
+    free(rbt->nil);
+    free(rbt);
 }
 
 rbtNode_t *rbtSearchRicorsiva(rbt_t *rbt, rbtNode_t *x, const int v)

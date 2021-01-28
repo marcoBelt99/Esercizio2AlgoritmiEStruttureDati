@@ -260,11 +260,25 @@ bool hashtableTest() // Vedere file testHashTable
     return true;
 }
 
+/* VECCHIA 
 void hashtableFree(hashtable_t *hashtbl)
 {
     for (unsigned int i = 0; i < hashtbl->size; i++)
         linkedListFree(hashtbl->entry[i]->list); // dealloco prima tutte le liste collegate di ogni entry della HT
     free(hashtbl);                               // poi la hash table
+} */
+
+// NUOVA
+/** @author Eduard  */
+void hashtableFree(hashtable_t *hashtbl)
+{
+    for (unsigned int i = 0; i < hashtbl->size; i++)
+    {
+        linkedListFree(hashtbl->entry[i]->list); // dealloco prima tutte le liste collegate di ogni entry della HT
+        free(hashtbl->entry[i]);                 // AGGIUNTO
+    }
+    free(hashtbl->entry); // AGGIUNTO
+    free(hashtbl);        // poi la hash table
 }
 
 // Fine HASHTABLE

@@ -29,19 +29,23 @@ bool rbtTest()
     // CREAZIONE
     rbt_t *T = createRbt();                                                                   // Creo l'rbt nello HEAP
     int A[] = {26, 17, 41, 14, 21, 30, 47, 10, 16, 19, 23, 28, 38, 7, 12, 15, 20, 35, 39, 3}; // Vettore contente i valore dei nodi che creerò ed inserirò
-    int chiave = 47;                                                                          // Mi servirà per verificare la Ricerca
+    /* rbtTestStructure_t test = malloc(sizeof(rbtTestStructure_t));
+    test->A = malloc(sizeof(int) * NUM_ELEMENTS_FOR_TEST);
+    test->A = {26, 17, 41, 14, 21, 30, 47, 10, 16, 19, 23, 28, 38, 7, 12, 15, 20, 35, 39, 3}; */
+    int chiave = 47; // Mi servirà per verificare la Ricerca
 
     // INSERIMENTO (preceduto dalla creazione di alcuni nodi)
-    for (int i = 0; i < 20; i++) // Creo nello HEAP 20 nodi e li Inserisco opportunamente nell'rbt T
+    for (unsigned int i = 0; i < NUM_ELEMENTS_FOR_TEST; i++) // Creo nello HEAP 20 nodi e li Inserisco opportunamente nell'rbt T
+                                                             //for (test->index = 0; test->index < NUM_ELEMENTS_FOR_TEST; test->index++)
         rbtInsert(T, createRbtNode(A[i]));
-    /* Questo codice è commentato per automatizzare le operazioni delle funzione bool rbtTest(); 
+    //rbtInsert(T, createRbtNode(test->A[test->A[test->index]]));
+    /* // Questo codice è commentato per non "sporcare lo stdoutput" 
     printf("\n******************** RBT INSERT ********************\n"); 
     printf("\nVisita IN-ORDER\n");
     */
+    // rbtInOrder(T, T->root);
 
-    // rbtInOrder(T, T->root); // // Commentare per non sporcare lo stdoutput
-
-    /* Questo codice è commentato per automatizzare le operazioni delle funzione bool rbtTest(); 
+    /* // Questo codice è commentato per non "sporcare lo stdoutput"; 
     // Stampo la dimensione dell'albero
     printf("\nDimensione dell'albero:\t%d\n", T->size);
     // Stampo le informazioni sulla sua radice, come ulteriore sicurezza di correttezza
@@ -64,7 +68,8 @@ bool rbtTest()
     {
         fprintf(stderr, "Non Trovato\n");
     }
-    /* else
+    /* Questo codice è commentato per non "sporcare lo stdoutput" 
+    else
         fprintf(stdout, "Trovato!\n"); */
 
     // sleep(1);
@@ -81,22 +86,17 @@ bool rbtTest()
         return false;
     }
 
-    /* Questo codice è commentato ai fini della funzione rbtTest
+    /* // Questo codice è commentato per non "sporcare lo stdoutput"
     printf("\n******************** MINIMO-MASSIMO ********************\n");
     printf("Il nodo minimo vale: %d\n", minimo->value);
     printf("Il nodo massimo vale: %d\n", massimo->value);
-    sleep(1); */
-
-    /* Questo codice è commentato ai fini della funzione rbtTest
+    sleep(1); 
     // Mi occupo di verificare l'Altezza Nera di ogni nodo, attraverso un attraversamento preOreder (risultante più comodo)
     printf("\n******************** ALTEZZA ALBERO ********************\n");
-    printf("Visualizzo altezza albero (visitandolo in PreOrder):\n"); */
-
+    printf("Visualizzo altezza albero (visitandolo in PreOrder):\n"); 
     // printf("\n");                          // Commentare per non sporcare lo stdoutput
     // stampaAltezzaNeraPreOrder(T, T->root); // Commento per non sporcare lo stdoutput
     // sleep(1);
-
-    /* Questo codice è commentato ai fini della funzione rbtTest   
     // Mi occupo di verificare le proprietà dell'albero
     printf("\nProprietà BST: ");
     if (rbtHasBstProperty(T) == true)
@@ -167,17 +167,24 @@ bool rbtTest()
 
     // A questo punto, Libero la memoria allocata precedentemente con la malloc in fase di creazione
     rbtFree(T);
-    if ((T->root != NULL) && (T->nil != NULL)) // Controllo che non ci siano memory leaks
+    //  Questo codice è commentato per non "sporcare lo stderr"
+    /* if ((T->root != NULL) && (T->nil != NULL)) // Controllo che non ci siano memory leaks
     {
         fprintf(stderr, "rbtTest:isRbt:rbtFree: Errore, Memory leaks\n");
         return false;
-    }
-    /* else
+    } 
+    */
+    /* //  Questo codice è commentato per non "sporcare lo stdoutput" 
+    else
     printf("C'è qualche altro nodo da ripulire\n");
     printf("Dimensione in memoria di un nodo: %ld\n", sizeof(rbtNode_t));
-    printf("Dimensione in memoria di un albero: %ld\n", sizeof(rbt_t)); */
+    printf("Dimensione in memoria di un albero: %ld\n", sizeof(rbt_t)); 
+    */
 
-    free(T); // Libero la memoria dell'albero
+    // Libero la memoria
+    // free(T);
+    /* free(test->A);
+    free(test); */
 
     //********** Se il flusso è arrivato fino a qui, la struttura dati è corretta. ***********/
     return true;

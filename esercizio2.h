@@ -6,12 +6,13 @@
 #include <string.h>  // String library (e.g., strcmp)
 #include <unistd.h>  // Per funzionalità POSIX
 
+// ########################################### define ###########################################
 #define RED 'R' // Uso un alias per rendere più informativo il singolo carattere
 #define BLACK 'B'
 
-//  STRUTTURE DATI
+// ########################################### STRUTTURE DATI ###########################################
 
-//  LISTE COLLEGATE
+// ********** LISTE COLLEGATE **********
 typedef struct linkedListNode_t // NODO della Lista
 {
     int value;                     // Chiave del nodo. Value contained in the node.
@@ -25,9 +26,9 @@ typedef struct linkedList_t // LISTA COLLEGATA
     struct linkedListNode_t *head; // Indirizzo della testa. Pointer to the head node of the list.
 } linkedList_t;
 
-// Fine Liste collegate
+// ********** Fine Liste collegate **********
 
-// HASHTABLE
+// ********** HASHTABLE **********
 typedef struct hashtableEntry_t // "Casella" di una Tabella Hash.
 {
     struct linkedList_t *list; // Puntatore a Lista
@@ -39,9 +40,9 @@ typedef struct hashtable_t // Tabella Hash
     struct hashtableEntry_t **entry; // Array di puntatori a "Caselle".
 } hashtable_t;
 
-// ----- Fine HASHTABLE ----- //
+// ********** Fine HASHTABLE ********** //
 
-// ----- RED BLACK TREE (RBT) ----- //
+// ********** RED BLACK TREE (RBT) ********** //
 
 typedef struct rbtNode_t // Nodo di un RBT
 {
@@ -65,9 +66,9 @@ typedef struct rbtTestStructure_t // test per l'RBT
     int index; // Current index of the array.
 } rbtTestStructure_t;
 
-//  End of RBT
+// ********** End of RBT **********
 
-//  STRUTTURE DATI AUSILIARIE
+// ###########################################  STRUTTURE DATI AUSILIARIE ###########################################
 
 typedef enum outputEnum_t
 {
@@ -75,9 +76,9 @@ typedef enum outputEnum_t
     ONFILE     // On file.
 } outputEnum_t;
 
-// fine  STRUTTURE DATI AUSILIARIE
+// ########################################### fine  STRUTTURE DATI AUSILIARIE ###########################################
 
-//  VARIABILI GLOBALI: DICHIARAZIONE CON KEYWORD: extern
+// ################################  VARIABILI GLOBALI: DICHIARAZIONE CON KEYWORD: extern ################################
 extern time_t RANDOM_SEED;                       // Random seed (important for reproducibility).
 extern const unsigned int MAX_RANDOM_NUMBER;     // Maximum random number allowed.
 extern const unsigned int MIN_OPERATIONS;        // Minimum number of operations.
@@ -90,13 +91,12 @@ extern const bool TEST_DATA_STRUCTURES;          // Test data structures?
 extern const unsigned int NUM_ELEMENTS_FOR_TEST; // Number of elements for testing.
 extern const outputEnum_t outputType;            // Output type.
 extern FILE *outputPointer;                      // Output pointer (for printing).
-// Fine VARIABILI GLOBALI
 
-// fine STRUTTURE DATI
+// ########################################### Fine VARIABILI GLOBALI ###########################################
 
-//  DICHIARAZIONI DELLE FUNZIONI
+//  ########################################### DICHIARAZIONI DELLE FUNZIONI ###########################################
 
-// LISTE COLLEGATE
+// ********** LISTE COLLEGATE **********
 
 /**
  * @brief Create a new linked list node.
@@ -145,9 +145,9 @@ void linkedListPrint(linkedList_t *);
  */
 void linkedListFree(linkedList_t *);
 
-// Fine LISTE COLLEGATE
+//  **********Fine LISTE COLLEGATE **********
 
-// HASHTABLE
+// **********  HASHTABLE **********
 
 /**
  * @brief Create a new hashtable.
@@ -204,9 +204,9 @@ bool hashtableTest();
  */
 void hashtableFree(hashtable_t *);
 
-// Fine HASHTABLE
+// ********** Fine HASHTABLE **********
 
-// RBT
+//**********  RBT **********
 
 /**
  * @brief Create new RBT node.
@@ -255,6 +255,15 @@ void rbtInsertFixup(rbt_t *, rbtNode_t *);
  * @return RBT node containing the value, if it exists; otherwise, NULL.
  */
 rbtNode_t *rbtSearch(rbt_t *, const int);
+
+
+/** 
+* @brief Ricerca Ricorsiva in un RBT: la faccio per vedere se è questa la causa di mal-funzionamento
+* @param rbt albero in cui effettuare la ricerca
+* @param x radice del sottoalbero in cui richiamarsi
+* @param v chiave da ricercare 
+*/
+rbtNode_t *rbtSearchRicorsiva(rbt_t *rbt, rbtNode_t *x, const int v);
 
 /**
  * @brief Print RBT in order.
@@ -312,9 +321,9 @@ void rbtFreeNodes(rbt_t *, rbtNode_t *);
  */
 void rbtFree(rbt_t *);
 
-// Fine RBT
+// ********** Fine RBT **********
 
-// AUXILIARY FUNCTIONS
+// ********** AUXILIARY FUNCTIONS **********
 /**
  * @brief Generate a collection of random numbers.
  * @param Array of random numbers.
@@ -322,6 +331,18 @@ void rbtFree(rbt_t *);
  */
 void generateRandomArray(int *, const int);
 
+/**
+ * @brief Genera un numero 'casuale'.
+ * @return il numero generato.
+ */
+int generateRandomKey();
+
+/**
+ * @brief Pattern for-each di stampa di un array.
+ * @param A Array da stampare.
+ * @param n dimensione (costante) dell'array da stampare.
+ */
+void printArray(int *A, const int n);
 /**
  * @brief Unit test: check if the input array is sorted.
  * @param Array to be checked if sorted.
@@ -337,7 +358,7 @@ bool isSorted(const int *, const int);
  * @param Nodi Vettore di nodi su cui salvare i nodi incontrati durante la visita
  * @param i puntatore all'indice per tenere traccia del percorso
  */
-void inorderToArray(rbt_t *rbt, rbtNode_t *x, rbtNode_t **Nodi, int *i);
+void inorderToArray(rbt_t *rbt, rbtNode_t *x, rbtNode_t **Nodi, unsigned *i);
 
 /**
  * @brief Allega alla visita PreOrder l'informazione sull'altezza nera per ogni nodo.
@@ -428,9 +449,10 @@ bool rbtProprieta_4(rbt_t *rbt);
  * @return true se la proprietà è vera, false altrimenti
  */
 bool rbtProprieta_5(rbt_t *rbt);
-// End of AUXILIARY FUNCTIONS
 
-// CORE FUNCTIONS
+// ********** End of AUXILIARY FUNCTIONS **********
+
+//  ********** CORE FUNCTIONS **********
 
 /**
  * @brief Function that does the experiment.
@@ -442,12 +464,7 @@ bool rbtProprieta_5(rbt_t *rbt);
  */
 clock_t doExperiment(int *, const unsigned int, const unsigned int, char *);
 
-// Aggiungo questa per vedere se è la causa che rallenta l'rbt
-/**
-* @brief Ricerca Ricorsiva in un RBT: la faccio per vedere se è questa la causa di mal-funzionamento
-* @param rbt albero in cui effettuare la ricerca
-* @param x radice del sottoalbero in cui richiamarsi
-* @param v chiave da ricercare 
-*/
-rbtNode_t *rbtSearchRicorsiva(rbt_t *rbt, rbtNode_t *x, const int v);
+
 // Fine CORE FUNCTIONS
+
+// ########################################### fine DICHAIRAZIONE FUNZIONI ###########################################

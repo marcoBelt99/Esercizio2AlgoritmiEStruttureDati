@@ -1,24 +1,8 @@
 #include "esercizio2.h"
 
-/*
-//  VARIABILI GLOBALI
-time_t RANDOM_SEED = 20;                         // Random seed (important for reproducibility).
- const unsigned int MAX_RANDOM_NUMBER = 10000000; // Maximum random number allowed.
- const unsigned int MIN_OPERATIONS = 100;         // Minimum number of operations.
- const unsigned int MAX_OPERATIONS = 2000;        // Maximum number of operations.
- const unsigned int STEP = 100;                   // Step of the experiment.
- const unsigned int NUM_EXPERIMENTS = 50;         // Number of experiments.
- const unsigned int PERCENTAGE_INSERTIONS = 40;   // Percentage of insert operations.
- const unsigned int NUM_ENTRIES = 59;             // Size of the hashtable.
- const bool TEST_DATA_STRUCTURES = true;          // Test data structures?
- const unsigned int NUM_ELEMENTS_FOR_TEST = 1000; // Number of elements for testing.
- const outputEnum_t outputType = ONFILE;          // Output type.
- FILE *outputPointer;                             // Output pointer (for printing).
- */
+// File di implementazione delle funzioni
 
-// IMPLEMENTAZIONI DELLE FUNZIONI
-
-// LISTE COLLEGATE
+// ############################## LISTE COLLEGATE ###########################################
 
 linkedListNode_t *createLinkedListNode(const int v)
 {
@@ -93,9 +77,9 @@ void linkedListFree(linkedList_t *list)
     free(list);
 }
 
-// Fine LINKED LIST
+// ############################# Fine LINKED LIST ##############################################
 
-// HASHTABLE
+//############################## HASHTABLE #####################################################
 
 hashtable_t *createHashtable(const unsigned int s)
 {
@@ -146,7 +130,7 @@ void hashtableDelete(hashtable_t *hashtbl, linkedListNode_t *x)
 
 void hashtablePrint(hashtable_t *hashtbl) // già implementata
 {
-    for (int i = 0; i < hashtbl->size; i++)
+    for (unsigned int i = 0; i < hashtbl->size; i++)
     {
         fprintf(stdout, "%d => ", i);
         linkedListPrint(hashtbl->entry[i]->list);
@@ -154,22 +138,29 @@ void hashtablePrint(hashtable_t *hashtbl) // già implementata
     }
 }
 
-/* bool hashtableTest() // Dimostro su file Separato
-{
-    return;
-} 
-*/
-
+// NUOVA
+/** @author Eduard  */
 void hashtableFree(hashtable_t *hashtbl)
+{
+    for (unsigned int i = 0; i < hashtbl->size; i++)
+    {
+        linkedListFree(hashtbl->entry[i]->list); // dealloco prima tutte le liste collegate di ogni entry della HT
+        free(hashtbl->entry[i]);                 // AGGIUNTO
+    }
+    free(hashtbl->entry); // AGGIUNTO
+    free(hashtbl);        // poi la hash table
+}
+/* VECCHIA
+ void hashtableFree(hashtable_t *hashtbl)
 {
     for (unsigned int i = 0; i < hashtbl->size; i++)
         linkedListFree(hashtbl->entry[i]->list); // Dealloco prima tutte le liste collegate di ogni entry della HT
     free(hashtbl);                               // Poi la hash table
-}
+} */
 
-// Fine HASHTABLE
+//######################## Fine HASHTABLE ###########################################
 
-// RBT
+//########################################### RBT ###########################################
 
 rbtNode_t *createRbtNode(const int v)
 {
@@ -406,11 +397,6 @@ void rbtInOrder(rbt_t *rbt, rbtNode_t *x) // Visita InOrder
     }
 } // fine rbtInOrder
 
-/* bool rbtTest() // Funzione su file separato:
-{
-    return;
-} */
-
 bool isRbt(rbt_t *rbt)
 {
     if (rbt) // Controllo validità dei puntatori
@@ -440,42 +426,16 @@ bool isRbt(rbt_t *rbt)
     }
 } // fine isRbt
 
-bool rbtHasBstProperty(rbt_t *rbt)
-{
-    rbtNode_t *Nodi[rbt->size]; // Dichiaro array di nodi
-    int i = 0;                  // Variabile contatore
-
-    inorderToArray(rbt, rbt->root, Nodi, &i); // Popolo l'array con la visita in order dell'albero
-
-    i = 0;
-    for (i = 0; i < rbt->size; i++)
-    {
-
-        if ((Nodi[i]->left != rbt->nil) && (Nodi[i]->right != rbt->nil)) // Se non sono foglie
-        {
-            if (Nodi[i]->value > Nodi[i]->left->value && Nodi[i]->value <= Nodi[i]->right->value) // Verifico questa proprietà per questo sottoalbero
-                continue;
-            else
-            {
-                *Nodi = NULL;
-                free(Nodi);
-                return false;
-            }
-        }
-
-    } // fine for
-
-    // Arrivato qui, ho soddisfatto la Proprietà BST
-    return true;
-}
-
-void rbtHasBstPropertyUtil(rbt_t *rbt, rbtNode_t *x, rbtTestStructure_t *test) // Non l'ho prevista
-{
-}
-
 int rbtComputeBlackHeight(rbt_t *rbt, rbtNode_t *x)
 {
-    if (rbt && x) // Controllo validità dei puntatori
+    if(x == rbt->nil)
+        return 0;
+    int lbh = rbtComputeBlackHeight(rbt, x->left);
+    int rbh = rbtComputeBlackHeight(rbt, x->right);
+    if(lbh == -1 || rbh == -1 || lbh != rbh)
+        return -1 ;
+    return lbh + (x->color == BLACK ? 1 : 0);
+    /* f (rbt && x) // Controllo validità dei puntatori
 
     {
         int altezzaNeraSinstra = 0;
@@ -508,23 +468,96 @@ int rbtComputeBlackHeight(rbt_t *rbt, rbtNode_t *x)
             return altezzaNeraSinstra; // Devono essere uguali le altezza nere di destra e di sinistra
         else
             return -1; // Codice di errore
-    }                  // fine if controllo validità dei puntatori
+
+    } // fine if controllo validità dei puntatori
     else
     {
         fprintf(stderr, "rbtComputeBlackHeight: Errore puntatori NULL\n");
         exit(EXIT_FAILURE);
-    }
+    } */
+    
 } // fine rbtComputeBlackHeight
 
-void rbtFreeNodes(rbt_t *T, rbtNode_t *x)
+bool rbtHasBstPropertyVecchia(rbt_t *rbt)
 {
-    if (T && x) // Controllo validità dei puntatori
+    rbtNode_t *Nodi[rbt->size]; // Dichiaro array di nodi
+    unsigned int i = 0;         // Variabile contatore
+
+    inorderToArray(rbt, rbt->root, Nodi, &i); // Popolo l'array con la visita in order dell'albero
+
+    i = 0;
+    for (i = 0; i < rbt->size; i++)
     {
-        if (x == T->nil)
+
+        if ((Nodi[i]->left != rbt->nil) && (Nodi[i]->right != rbt->nil)) // Se non sono foglie
+        {
+            if (Nodi[i]->value > Nodi[i]->left->value && Nodi[i]->value <= Nodi[i]->right->value) // Verifico questa proprietà per questo sottoalbero
+                continue;
+            else
+            {
+                *Nodi = NULL;
+                free(Nodi);
+                return false;
+            }
+        }
+
+    } // fine for
+
+    // Arrivato qui, ho soddisfatto la Proprietà BST
+    return true;
+}
+
+// Nuove funzioni
+void rbtHasBstPropertyUtil(rbt_t *rbt, rbtNode_t *x, rbtTestStructure_t *test) // Non l'ho prevista
+{
+    if (x != rbt->nil)
+    { // Bisogna fare a come si comporta il flusso di esecuzione del programma
+        // stando attenti all'ordine di creazione / distruzione dei record di attivazine
+
+        rbtHasBstPropertyUtil(rbt, x->left, test);  // Richiamati ricorsivamente sul sottoalbero sinistro
+        test->A[(test->index++)] = x->value;        // (stampa) --> Salva in posizione i++
+        rbtHasBstPropertyUtil(rbt, x->right, test); // Richiamati ricorsivamente sul sottoalbero destro
+    }
+}
+
+bool rbtHasBstProperty(rbt_t *rbt)
+{
+    rbtTestStructure_t *test = NULL;
+
+    // Alloco la memoria
+    test = malloc(sizeof(test));               // alloco per la struttura in sè
+    test->A = malloc(sizeof(int) * rbt->size); // alloco per il vettore che contiene i valori del campo x->value del nodo dell'albero
+    // test->index = malloc(sizeof(int));
+    test->index = 0; // Inializzo l'indice del vettore a 0, si incrementerà ad ogni chiamata ricorsiva
+
+    // Chiamo la procedura
+    rbtHasBstPropertyUtil(rbt, rbt->root, test);
+
+    // Controllo effettivo ordinamento dell'array della struttura
+    if (!isSorted(test->A, test->index))
+    {
+        fprintf(stderr, "rbtHasBstProperty: Errore, Array non ordinato\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Libero la memoria
+    // free(test->index);
+    free(test->A);
+    free(test);
+    return true;
+}
+
+/** @author Eduard */
+void rbtFreeNodes(rbt_t *rbt, rbtNode_t *x)
+{
+    /* VECCHIO (troppo complicato)
+    if (rbt && x) // Controllo validità dei puntatori
+    {
+        if (x == rbt->nil)
             return;
 
-        rbtFreeNodes(T, x->left);
-        rbtFreeNodes(T, x->right);
+        rbtFreeNodes(rbt, x->left);
+        rbtFreeNodes(rbt, x->right);
 
         x->left = NULL; // Rendo invalidi i puntatori
         x->right = NULL;
@@ -536,33 +569,46 @@ void rbtFreeNodes(rbt_t *T, rbtNode_t *x)
         fprintf(stderr, "rbtFreeNodes: Errore puntatori NULL\n");
         exit(EXIT_FAILURE);
     } // fine rbtFreeNodes
+    */
+
+    // NUOVO
+    if (x != rbt->nil)
+    {
+        rbtFreeNodes(rbt, x->left);
+        rbtFreeNodes(rbt, x->right);
+        free(x);
+    }
 }
 
-void rbtFree(rbt_t *T)
+/** @author Eduard */
+void rbtFree(rbt_t *rbt)
 {
-    if (T) // Controllo validità puntatori
+    /* VECCHIO (troppo complicato)
+    if (rbt) // Controllo validità puntatori
     {
-        rbtFreeNodes(T, T->root); // Prima libero tutti i nodi ricorsivamente
-        T->size = 0;              // Poi azzero la size
-        T->root = NULL;           // Poi rendo invalidi i puntatori della struttura ad albero
-        T->nil = NULL;
-        free(T->nil);  // Libero il nodo rbt->nil
-        free(T->root); // Libero il nodo rbt->root
+        rbtFreeNodes(rbt, rbt->root); // Prima libero tutti i nodi ricorsivamente
+        rbt->size = 0;                // Poi azzero la size
+        rbt->root = NULL;             // Poi rendo invalidi i puntatori della struttura ad albero
+        rbt->nil = NULL;
+        free(rbt->nil);  // Libero il nodo rbt->nil
+        free(rbt->root); // Libero il nodo rbt->root
     }
     else
     {
         fprintf(stderr, "rbtFree: Errore puntatori NULL\n");
         exit(EXIT_FAILURE);
     }
+    */
+
+    // NUOVO
+    rbtFreeNodes(rbt, rbt->root);
+    free(rbt->nil);
+    free(rbt);
 }
+// ########################################### End of RBT ###########################################
 
-// End of RBT
-
-// AUXILIARY FUNCTIONS
-
-// funzione generateRandomArray spostata sul main. Ho spostato anche la funzione doExperiment
-
-bool isSorted(const int *A, const int n) // implementata
+// ###########################################  AUXILIARY FUNCTIONS ###########################################
+bool isSorted(const int *A, const int n) // Già implementata
 {
     // For each i in 0..n-2, if the current element is greater than the next one,
     // then it is unsorted.
@@ -572,9 +618,8 @@ bool isSorted(const int *A, const int n) // implementata
     // Otherwise it is.
     return true;
 }
-
 // IDEA: Usare array di nodi in cui mi salvo la visita in order e controllo se per tutti vale la proprietà
-void inorderToArray(rbt_t *rbt, rbtNode_t *x, rbtNode_t **Nodi, int *i)
+void inorderToArray(rbt_t *rbt, rbtNode_t *x, rbtNode_t **Nodi, unsigned int *i)
 {
     if (rbt && x && Nodi && i)
     {
@@ -598,7 +643,7 @@ bool rbtProprieta_1(rbt_t *rbt) // 1. Ogni nodo è rosso o nero.
     if (rbt) // Controllo che il puntatore sia valido
     {
         rbtNode_t *Nodi[rbt->size];               // Dichiaro un array di nodi, tanti quanti ne contiene l'albero
-        int i = 0;                                // Variabile per scorrere l'array di nodi
+        unsigned int i = 0;                       // Variabile per scorrere l'array di nodi
         inorderToArray(rbt, rbt->root, Nodi, &i); // Riempio con i nodi ordinati l'array di nodi Nodi.
         // TODO: L'indice lo passo per riferimento, altrimenti alla fine di ogni chiamata ricorsiva sarebbe verrebbe distrutto
         //e le modifiche non sarebbero permanenti
@@ -637,7 +682,7 @@ bool rbtProprieta_3(rbt_t *rbt) // 3. Ogni foglia (NIL) è nera
     if (rbt) // Se è valido
     {
         rbtNode_t *Nodi[rbt->size];               // Dichiaro un array di nodi, tanti quanti ne contiene l'albero
-        int i = 0;                                // Variabile per scorrere l'array di nodi
+        unsigned int i = 0;                       // Variabile per scorrere l'array di nodi
         inorderToArray(rbt, rbt->root, Nodi, &i); // Riempio con i nodi ordinati l'array di nodi Nodi.
 
         for (i = 0; i < rbt->size; i++) // Controllo la proprietà per ogni nodo salvato nell'array Nodi
@@ -673,7 +718,7 @@ bool rbtProprieta_4(rbt_t *rbt) // 4. Se un nodo è rosso, allora entrambi i suo
     if (rbt)
     {
         rbtNode_t *Nodi[rbt->size];               // Dichiaro un array di nodi, tanti quanti ne contiene l'albero
-        int i = 0;                                // Variabile per scorrere l'array di nodi
+        unsigned int i = 0;                       // Variabile per scorrere l'array di nodi
         inorderToArray(rbt, rbt->root, Nodi, &i); // Riempio con i nodi ordinati l'array di nodi Nodi
 
         for (i = 0; i < rbt->size; i++) // Controllo la proprietà per ogni nodo salvato nell'array Nodi
@@ -704,7 +749,7 @@ bool rbtProprieta_5(rbt_t *rbt) // 5. Per ogni nodo, tutti i cammini semplici ch
     if (rbt) // Se è valido
     {
         rbtNode_t *Nodi[rbt->size];               // Dichiaro un array di nodi, tanti quanti ne contiene l'albero
-        int i = 0;                                // Variabile per scorrere l'array di nodi
+        unsigned int i = 0;                       // Variabile per scorrere l'array di nodi
         inorderToArray(rbt, rbt->root, Nodi, &i); // Riempio con i nodi ordinati l'array di nodi: 'Nodi'
         // int contaNeriLeft, contaNeriRight = 0;    // Contatori di nodi neri a sinistra e a destra
 
@@ -886,11 +931,6 @@ bool rbtHasBstProperty_Iterativa(rbt_t *rbt) // !!!Non propriamente corretta !!!
     }
     return true;
 }
-// End of AUXILIARY FUNCTIONS
-
-// Fine IMPLEMENTATION OF THE FUNCTIONS
-
-// Aggiungo funzione ricerca ricorsiva allo scopo di verificare se è questa l'operazione che rallenta
 rbtNode_t *rbtSearchRicorsiva(rbt_t *rbt, rbtNode_t *x, const int v)
 {
     if (x == rbt->nil || v == x->value)
@@ -900,3 +940,97 @@ rbtNode_t *rbtSearchRicorsiva(rbt_t *rbt, rbtNode_t *x, const int v)
     else
         return rbtSearchRicorsiva(rbt, x->right, v);
 }
+void generateRandomArray(int *A, const int n) // implementata
+{
+    // For each i in 0..n-1, generate a random number.
+    for (int i = 0; i < n; i++)
+        A[i] = rand() % MAX_RANDOM_NUMBER;
+}
+int generateRandomKey() { return rand() % MAX_RANDOM_NUMBER; }
+void printArray(int *A, const int n)
+{
+    for (int i = 0; i < n; i++)
+        printf("%d\n", A[i]);
+    //printf("\n");
+}
+
+// ###########################################  Fine of AUXILIARY FUNCTIONS ###########################################
+
+// ########################################### CORE FUNCTIONS ###########################################
+
+clock_t doExperiment(int *randomArray, const unsigned int numInsertions, const unsigned int numSearches, char *dataStructure)
+{
+    // Cosa sbagliavo:
+    // Non ho mai usato il parametro numSearches; (ho analizzato lo pseudocodice). --> Altrimenti come avrei potuto fare la proporzione tra il # di inserts e il # di searches
+    // In pratica, nello pseudocodice ho l'istruzione op_type = "Random()". Invece nel programma è stato gestito in % di inserimenti e % di ricerche
+    // Ho
+
+    // Dichiarazioni variabili (Inizializzazione di alcune):
+    clock_t tempoInizio, tempoFine = 0;
+
+    // Genero (pseudo)casualmente la chiave che dovrò cercare
+    int chiaveDiRicerca = generateRandomKey();
+    // int chiaveDiRicera = 243; // Chiave di ricerca fissata
+
+    // Contatore delle operazioni (va da 0 a num_op-1) --> Vedere lo pseudocodice
+    unsigned int op;
+
+    // Popolo l'array randomArray di numInsertions numeri casuali
+    generateRandomArray(randomArray, numInsertions);
+
+    if (strcmp(dataStructure, "hashtable") == 0)
+    { // ************** HASH TABLE **************
+        // Dichiarazione variabili
+        // linkedListNode_t *nodoLista = NULL; // Potrei commentarlo visto che non è mai usato
+        hashtable_t *HT = NULL;
+
+        // Inizializzazione variabili
+        HT = createHashtable(NUM_ENTRIES); // Creo la HT di dimensione NUM_ENTRIES
+
+        tempoInizio = clock(); // Inizia l'esperimento per le HT
+
+        for (op = 0; op < numInsertions; op++) // Faccio numInsertion inserimenti
+            hashtableInsert(HT, randomArray[op]);
+
+        for (op = 0; op < numSearches; op++)                         // Faccio numSearches ricerche
+            /* nodoLista =  */ hashtableSearch(HT, chiaveDiRicerca); // commento nodoLista poichè non verrebbe mai usato (come suggerito dall'opzione -Wall -Wextra di gcc)
+
+        tempoFine = clock(); // Fine esperimento per le HT(fine esecuzione num_op operazioni)
+
+        hashtableFree(HT); // Dealloco la memoria precedentemente allocata: Lo metto fuori, perchè a me interessa cronometrare solo le operazioni di inserimento e ricerca
+    }
+    else if (strcmp(dataStructure, "rbt") == 0)
+    {
+        // ************** RBT **************
+        // Dichiarazione delle variabili
+        rbt_t *T = NULL;
+        // rbtNode_t *nodoRBT = NULL; // Potrei commentarlo visto che non è mai usato (come suggerito dall'opzione -Wall -Wextra di gcc)
+
+        // Inizializzazione variabili
+        T = createRbt();
+
+        tempoInizio = clock(); // Inizia l'esperimento per le HT
+
+        for (op = 0; op < numInsertions; op++)
+            rbtInsert(T, createRbtNode(randomArray[op]));
+
+        for (op = 0; op < numSearches; op++)
+            /* nodoRBT = */ rbtSearch(T, chiaveDiRicerca); // commento nodoRBT poichè non viene mai usato (come suggerito dall'opzione -Wall -Wextra di gcc)
+
+        tempoFine = clock(); // Fine esperimento per le HT(fine esecuzione num_op operazioni)
+
+        rbtFree(T); // Dealloco la memoria precedentemente allocata: Lo metto fuori, perchè a me interessa cronometrare solo le operazioni di inserimento e ricerca
+    }
+    else
+    {
+        fprintf(stderr, "doExperiment: Errore sul nome della struttura dati inserita.\
+        \nSi prega di utilizzare:\n\t'hashtable' per sperimentare le tabelle hash\n\t'rbt'\
+        per sperimentare gli alberi red black\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return (tempoFine - tempoInizio);
+}
+//  ########################################### Fine CORE FUNCTIONS ########################################### 
+
+// ###########################################   Fine IMPLEMENTATION OF THE FUNCTIONS ########################################### 
