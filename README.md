@@ -61,7 +61,7 @@ aprire 'Grafici.m' ed eseguirlo (dentro matlab).
 
 # Aggiunte
 
-- Ho aggiunto il file [Grafico.m](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/Grafico.m) che permette di fare il plot dei risultati.
+- Ho aggiunto il file [Grafici.m](https://github.com/marcoBelt99/Algoritmi_e_Strutture_Dati/blob/main/Grafici.m) che permette di fare il plot dei risultati.
 
 - Ho aggiunto alcuni file *.jpg prodotti dai grafici dello script matlab appena citato.
 Notare che tali file sono nominati: 'numeroInsert_numeroHTsize.jpg'
