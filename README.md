@@ -4,7 +4,7 @@ In questo repository sono presenti i sorgenti dell'esercizio 2 di ASD a.a. 2020/
 L'esercizio consiste nel confrontare sperimentalmente, per input crescenti e casuali (uniformemente distribuiti) le operazioni di dizionario, eccetto l'eliminazione, che offrono le due strutture dati Hash Table e Red Black Tree.
 Riporto il testo integralmente:<br/>
 
-*Realizzare un esperimento implementando sia una tabella hash con conitti
+*Realizzare un esperimento implementando sia una tabella hash con conflitti
 risolti via chaining sia un albero red-black. Misurare il tempo medio per n
 operazioni con n crescente, chiavi intere maggiori di zero casuali, su
 entrambe le strutture, e confrontarlo. Realizzare il confronto per diversi
